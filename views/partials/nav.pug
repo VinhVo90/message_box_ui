@@ -1,0 +1,14 @@
+nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
+  button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarNav' aria-controls='navbarNav' aria-expanded='false' aria-label='Toggle navigation')
+    span.navbar-toggler-icon
+  #navbarNav.collapse.navbar-collapse
+    ul.navbar-nav
+      li.nav-item
+        a.nav-link(class=activePage=="user_management" ? "active" : "", href='/user_management')
+          | User Management
+      li.nav-item
+        a.nav-link(class=activePage=="sender" ? "active" : "", href='/sender')
+          | Sender
+      li.nav-item
+        a.nav-link(class=activePage=="recipent" ? "active" : "", href='/recipent')
+          | Recipient

@@ -1,0 +1,83 @@
+.vertex_content {
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+	background: #ffffff;
+}
+
+.content_header_name {
+	border-bottom: 1px black solid;
+}
+.header_name {
+  margin: 0px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 13px;
+
+  p {
+    margin: unset !important;
+    margin-block-start: unset !important;
+    margin-block-end: unset !important;
+  }
+}
+
+:root {
+  --key-width: 46%;
+  --connector-width: 12px;
+}
+
+.vertex_data {
+  font-size: 10px;
+
+  div {
+    border-bottom: 1px solid #000000;
+    display: inline-flex;
+    width: 100%;
+    font-weight: 300;
+
+    label {
+      font-weight: 500 !important;
+      margin-bottom: unset !important;
+    }
+
+    .key{
+      width: var(--key-width);
+      margin-left: 1px;
+      max-width: var(--key-width);
+    }
+
+    .data{
+      width: calc(100% - var(--key-width) - 7px);
+      margin-left: 5px;
+      margin-right: 1px;
+      border: none;
+      max-width: calc(100% - var(--key-width) - 7px);
+    }
+
+    .has_left_connect{
+      margin-left: var(--connector-width);
+      width: calc(var(--key-width) - var(--connector-width));
+      max-width: calc(var(--key-width) - var(--connector-width));
+    }
+    
+    .has_right_connect{
+      margin-right: var(--connector-width);
+      width: calc(100% - var(--key-width) - 7px - var(--connector-width));
+      max-width: calc(100% - var(--key-width) - 7px - var(--connector-width));
+    }
+  }
+}
+
+.drag_connect {
+  &:hover {
+    outline: -webkit-focus-ring-color auto;
+  }
+
+  &:focus {
+    outline: -webkit-focus-ring-color auto;
+  }
+}
+
+.marked_connector {
+  fill: #ff4828
+}

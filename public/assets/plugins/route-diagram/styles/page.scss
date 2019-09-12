@@ -1,0 +1,181 @@
+:root {
+  --filename-bar-height: 20px;
+  --list-view-width: 200px;
+  --color-loader: #ce4233;
+}
+
+
+/* width */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  //background: #f1f1f1;
+  background: #f5f5f5;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  //background: #888;
+  background: #c5c5c5;
+  border-radius: 10px;
+  border: #f5f5f5 solid 3px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555555;
+}
+
+#loader {
+  width: 250px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  font-family: helvetica, arial, sans-serif;
+  text-transform: uppercase;
+  font-weight: 900;
+  color: var(--color-loader);
+  letter-spacing: 0.2em;
+  
+  &::before, &::after {
+    content: "";
+    display: block;
+    width: 15px;
+    height: 15px;
+    background: var(--color-loader);
+    position: absolute;
+    animation: load .7s infinite alternate ease-in-out;
+  }
+  
+  &::before {
+    top: 0;
+  }
+  
+  &::after {
+    bottom: 0;
+  }
+}
+
+@keyframes load {
+  0% { left: 0; height: 30px; width: 15px }
+  50% { height: 8px; width: 40px }
+  100% { left: 235px; height: 30px; width: 15px}
+}
+
+body {
+  overflow: hidden;
+  height: 100vh;
+}
+
+.main-container {
+  width: 100%;
+  height: 100%;
+
+  .list-view {
+    width: var(--list-view-width);
+    height: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    float: left;
+    word-break: break-all;
+  }
+
+  .main-view {
+    width: calc(100% - var(--list-view-width));
+    height: 100%;
+    float: left;
+  }
+}
+
+// CSS container svg
+
+.container-svg {
+  top: 20px;
+  bottom: 0;
+  touch-action: none;
+  overflow: auto;
+  position: absolute;
+
+  .svg {
+    width: 100%;
+    min-height: 2000px;
+  }
+}
+
+.connect-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  pointer-events: none;
+}
+
+.graphContainer {
+  height: 100%;
+}
+
+.svgContainer {
+  left: 0px;
+  touch-action: none;
+  overflow: auto;
+  height: 100%;
+
+  .svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    min-width: 1900px;
+    min-height: 2000px;
+  }
+}
+
+// CSS container file management
+.container-file {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+
+  .fa-folder-open-o:hover {
+    color: #66afe9;
+  }
+
+  .icon-folder-file-mgmt {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    bottom: 10px;
+    right: 12px;
+    font-size: 30px;
+  }
+
+  .file-mgmt {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 11px 24px 3px;
+    position: relative;
+    background-color: #ffffff;
+    display: block;
+    z-index: 10000;
+
+    .form-horizontal {
+      margin: 10px 0;
+
+      .group-type-file-input {
+        .form-control {
+					float: left;
+        }
+      }
+    }
+  }
+}
+
+.hidden-object {
+  display: none;
+}

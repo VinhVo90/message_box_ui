@@ -1,0 +1,21 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge,chrome=1')
+    title #{title}
+    meta(content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0', name='viewport')
+    meta(name='viewport', content='width=device-width')
+    include partials/styles
+    block styles
+  body
+    include partials/nav
+    .container-fluid#app
+      block modal
+      section.content.mt-3
+        block content
+      // include partials/footer
+  include partials/scripts
+  block scripts
+  if activePage != ''
+    script(src='/assets/pages/' + activePage + '.js')

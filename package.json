@@ -1,0 +1,42 @@
+{
+  "name": "koa-example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-dev": "node ./node_modules/babel-watch/babel-watch.js app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "babel-watch": "^7.0.0",
+    "dotenv": "^8.1.0",
+    "koa": "^2.8.1",
+    "koa-body": "^4.1.1",
+    "koa-connect": "^2.0.1",
+    "koa-locals": "^0.3.0",
+    "koa-pug": "^4.0.2",
+    "koa-router": "^7.4.0",
+    "koa-sass": "^2.0.0",
+    "koa-static": "^5.0.0",
+    "koa-views": "^6.2.1",
+    "node-sass-middleware": "^0.11.0",
+    "oracledb": "^4.0.1",
+    "pug": "^2.0.4",
+    "sequelize-oracle": "^3.3.2-0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.6.0",
+    "@babel/register": "^7.6.0"
+  }
+}
