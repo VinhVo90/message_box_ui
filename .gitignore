@@ -1,0 +1,14 @@
+.git/
+.vscode/
+
+dist/
+
+node_modules/
+
+yarn\.lock
+
+release-builds/
+
+yarn-error\.log
+
+package-lock\.json

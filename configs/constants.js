@@ -39,6 +39,8 @@ const TIME_UNIT = {
 
 const PASSWORD = '1111';
 
+const API_SERVER = 'http://172.20.120.225:3000';
+
 module.exports = {
   ENV,
   PORT,
@@ -46,5 +48,6 @@ module.exports = {
   ROUTES,
   FORMAT,
   PASSWORD,
-  TIME_UNIT
+  TIME_UNIT,
+  API_SERVER
 }
