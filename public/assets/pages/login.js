@@ -42,7 +42,7 @@ window.app = new Vue({
             return;
           }
 
-          window.open("/user_management","_self");
+          // window.open("/user_management","_self");
         },100);
         
       }).catch(ex => {

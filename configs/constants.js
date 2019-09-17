@@ -56,6 +56,6 @@ module.exports = {
   FORMAT,
   PASSWORD,
   TIME_UNIT,
-  API_SERVER
+  API_SERVER,
   CRUD_FLAG
 }

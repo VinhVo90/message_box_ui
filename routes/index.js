@@ -17,6 +17,7 @@ router.post('/api/getUsers', userManagementController.getUsers);
 router.post('/api/saveUsers', userManagementController.saveUsers);
 router.post('/api/getGroups', userManagementController.getGroups);
 router.post('/api/saveGroups', userManagementController.saveGroups);
+router.post('/api/getUserHistory', userManagementController.getUserHistory);
 
 router.get('/sender', async ctx => {
   await SenderController.getIndex(ctx);

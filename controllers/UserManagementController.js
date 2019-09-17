@@ -20,10 +20,17 @@ const saveGroups = async (ctx) => {
   await userManagementService.saveGroups(ctx);
 }
 
+const getUserHistory = async (ctx) => {
+  await userManagementService.getUserHistory(ctx);
+}
+
+
+
 module.exports = {
   getIndex,
   getUsers,
   saveUsers,
   getGroups,
-  saveGroups
+  saveGroups,
+  getUserHistory
 }

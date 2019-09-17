@@ -13,7 +13,11 @@ const getUserInfo = async function (ctx) {
   await models.sequelize.query(query, {
     type: Sequelize.QueryTypes.SELECT
   }).then(result => {
-    ctx.body = result;
+    if (result.length > 0) {
+      ctx.response.redirect('/user_management');
+    } else {
+      ctx.body = result;
+    }
   });
 }
 

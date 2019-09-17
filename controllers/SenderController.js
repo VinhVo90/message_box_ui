@@ -3,7 +3,6 @@ const fs = require('fs');
 const path = require('path');
 
 const getIndex = async (ctx) => {
-  const str = fs.readFileSync(path.resolve(__dirname, '..', 'clobexample.txt'), 'utf8');
   await ctx.render('sender/index');
 }
 

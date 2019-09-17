@@ -15,6 +15,7 @@ window.app = new Vue({
       userType: '',
       userList: [],
       groupList: [],
+      userHistoryList: [],
       waiting: false,
       selectedSystemId: ''
     }
@@ -54,6 +55,25 @@ window.app = new Vue({
           setTimeout(() => {
             this.initUserTableEvent();
           }, 100);
+        }, 100);
+
+      }).catch(ex => {
+        this.waiting = false;
+        console.log(ex);
+      });
+    },
+
+
+    onLoadUserHistory(systemId) {
+      this.waiting = true;
+      axios.post('/api/getUserHistory', {
+        params: {
+          systemId: systemId
+        }
+      }).then((response) => {
+        setTimeout(() => {
+          this.userHistoryList = response.data;
+          this.waiting = false;
         }, 100);
 
       }).catch(ex => {
@@ -207,15 +227,17 @@ window.app = new Vue({
     },
 
     initUserTableEvent() {
-      $('#table_user_list .history-label').unbind();
+      const self = this;
 
+      $('#table_user_list .history-label').unbind();
       $('#table_user_list .history-label').click(function() {
-        alert($(this).text());
+        const systemId = $(this).closest('tr').find('td')[2].innerHTML;
+        $('#historySystemId').val(systemId);
+        $('#userHistoryDialog').modal('show');
+        self.onLoadUserHistory(systemId);
       });
 
       $('#table_user_list td[colName="SYSTEM_ID"]').unbind();
-
-      const self = this;
       $('#table_user_list td[colName="SYSTEM_ID"]').click(function() {
         const systemId = this.innerHTML;
         self.onLoadGroupList(systemId);

@@ -22,6 +22,26 @@ const getUsers = async (ctx) => {
     query += `
     AND UPPER(ACCESS_CONTROL) LIKE '%${userType.toUpperCase()}%'`;
   }
+
+  query += `
+    ORDER BY U.SYSTEM_ID DESC`;
+ 
+  await models.sequelize.query(query, {
+    type: Sequelize.QueryTypes.SELECT
+  }).then(result => {
+    ctx.body = result;
+  });
+}
+
+const getUserHistory = async (ctx) => {
+  const { systemId } = ctx.request.body.params;
+
+  const query = `
+    SELECT SYSTEM_ID, USER_ID, TO_CHAR(REC_TIME, 'DD MON YYYY, HH12:MI AM') AS REC_TIME
+    FROM USER_ACCOUNT_HISTORY HIS
+    WHERE SYSTEM_ID = '${systemId}'
+    ORDER BY HIS.REC_TIME DESC
+  `;
  
   await models.sequelize.query(query, {
     type: Sequelize.QueryTypes.SELECT
@@ -173,5 +193,6 @@ module.exports = {
   getUsers,
   saveUsers,
   getGroups,
-  saveGroups
+  saveGroups,
+  getUserHistory
 }

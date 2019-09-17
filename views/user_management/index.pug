@@ -84,4 +84,28 @@ block content
                     input(type="checkbox")
                   td.text-center(style="display:none" colName="SYSTEM_ID") {{group.SYSTEM_ID}}
                   td.text-center(colName="GROUP_ID" v-bind:contenteditable="group.SYSTEM_ID !== '' ? false : true") {{group.GROUP_ID}}
+
+  #userHistoryDialog.modal.fade(role='dialog')
+    .modal-dialog
+      // Modal content
+      .modal-content
+        .modal-header
+          h4.modal-title History
+          button.close(type='button' data-dismiss='modal') &times;
+        .modal-body
+          form(role='form')
+            .card-body
+              .form-group
+                label System Id
+                input#historySystemId.form-control(type="text" disabled="true")
+              table.table.table-bordered#table_user_history
+                tbody
+                  tr
+                    th.text-center User Id
+                    th.text-center Rec Time
+                  tr(v-for="his in userHistoryList")
+                    td.text-center(colName="USER_ID") {{his.USER_ID}}
+                    td.text-center(colName="REC_TIME") {{his.REC_TIME}}
+        .modal-footer
+          button.btn.btn-default(type='button' data-dismiss='modal') Close
 block scripts

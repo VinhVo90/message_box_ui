@@ -7,11 +7,7 @@ const getIndex = async (ctx) => {
   await ctx.render('login/index', model);
 }
 
-const getUserInfo = async function(ctx) {
-
-  const params = ctx.request.body.params;
-  
-  console.log(params);
+const getUserInfo = async (ctx) => {
   await LoginService.getUserInfo(ctx);
 }
 
