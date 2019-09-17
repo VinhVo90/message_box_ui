@@ -33,6 +33,7 @@ window.app = new Vue({
 
     onBtnFindClick() {
       this.waiting = true;
+      let self = this;
 
       if (this.searchData.sendTime != null) {
         let sendDate = moment(moment(this.searchData.sendTime).format(this.momentDateFormat), this.momentDateFormat);
@@ -64,6 +65,26 @@ window.app = new Vue({
           }
           return item;
         });
+
+        let table = $('#messageTable').DataTable({
+          data: response.data,
+          columns: [
+            {data : 'RECIPIENT_ID'},
+            {data : 'GROUP_ID'},
+            {data : 'SEND_TIME_FORMAT'},
+            {data : 'RECV_TIME_FORMAT'},
+            {data : 'NAME'}
+          ],
+          bDestroy: true,
+          pagingType: 'full_numbers'
+        });
+
+        $('#messageTable').on('click', 'tbody tr', function(event) {
+          let data = table.row(this).data();
+          self.selectedMessage = Object.assign({}, data);
+          $("#recipientDialog").modal("show");
+        })
+
         this.messageData = response.data;
       });
       setTimeout(() => {
@@ -89,7 +110,14 @@ window.app = new Vue({
 
       axios.post('/sender/send-message', postData).then((response) => {
         this.waiting = false;
-        $("#recipientDialog").modal("hide");
+        let data = response.data;
+        if (data.error) {
+          toastr.error(data.data)
+        }
+        else {
+          $("#recipientDialog").modal("hide");
+          toastr.success('Send success');
+        }
       }).catch((error) => {
         this.waiting = false;
         console.log(error);

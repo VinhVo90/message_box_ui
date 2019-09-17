@@ -47,9 +47,13 @@ const sendMessage = async (ctx) => {
   await axios.post(`${CONSTANT.API_SERVER}/msgbox/${sender}/send/${recipient}/${group}`, messageData)
       .then((response) => {
         ctx.body = response;
-        console.log(response);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        ctx.body = {
+          error : error.response.status,
+          data : error.response.data
+        };
+      });
 }
 
 module.exports = {

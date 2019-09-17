@@ -37,7 +37,7 @@ block content
                   label(for='messageNameText') Message Name
                   input#messageNameText.form-control(type='text' placeholder='Message Name', v-model='searchData.messageName')
       .col-10.border.rounded.pt-2.mb-2
-        table.table.table-bordered.table-hover
+        table#messageTable.table.table-bordered.table-hover
           thead
             tr
               th(scope='col') Recipient
@@ -45,13 +45,6 @@ block content
               th(scope='col') Send Time
               th(scope='col') Recv Time
               th(scope='col') Message Name
-          tbody
-            tr(v-for="message in messageData", @click="onRowClick(message)")
-              td(v-html="message.RECIPIENT_ID")
-              td(v-html="message.GROUP_ID")
-              td(v-html="message.SEND_TIME_FORMAT")
-              td(v-html="message.RECV_TIME_FORMAT")
-              td(v-html="message.NAME")
     #recipientDialog.modal.fade(role='dialog')
       .modal-dialog.recipientModal
         // Modal content
@@ -81,6 +74,6 @@ block content
                         textarea#contentMessageText.form-control(rows='7', v-model='selectedMessage.CONTENT')
           .modal-footer
             button.btn.btn-default(type='button' data-dismiss='modal') Cancel
-            button.btn.btn-default(type='button') Send
+            button.btn.btn-default(type='button', @click="onSendClick") Send
             
 block scripts
