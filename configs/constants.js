@@ -39,6 +39,13 @@ const TIME_UNIT = {
 
 const PASSWORD = '1111';
 
+const CRUD_FLAG = {
+  CREATE: 'C',
+  RETRIEVE: 'R',
+  UPDATE: 'U',
+  DELETE: 'D'
+}
+
 module.exports = {
   ENV,
   PORT,
@@ -46,5 +53,6 @@ module.exports = {
   ROUTES,
   FORMAT,
   PASSWORD,
-  TIME_UNIT
+  TIME_UNIT,
+  CRUD_FLAG
 }

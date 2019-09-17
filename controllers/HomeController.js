@@ -1,5 +1,5 @@
 const getIndex = (ctx) => {
-  ctx.response.redirect('/user_management');
+  ctx.response.redirect('/login');
 }
 
 module.exports = {

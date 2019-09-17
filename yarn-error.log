@@ -1,0 +1,79 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js dev
+
+PATH: 
+  C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\Vinh.Vo\bin;D:\app\client\vinh.vo\product\18.0.0\client_1\bin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;C:\Program Files\TortoiseSVN\bin;C:\Program Files\Microsoft SQL Server\110\Tools\Binn;C:\Program Files\Microsoft SQL Server\120\Tools\Binn;C:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn;C:\Program Files\Microsoft SQL Server\110\DTS\Binn;C:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\ManagementStudio;C:\Program Files (x86)\Microsoft SQL Server\110\DTS\Binn;C:\xampp\php;C:\Program Files (x86)\Yarn\bin;C:\Program Files\Git\cmd;C:\Users\Vinh.Vo\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\orcl\instantclient_12_2;D:\soft\VS Code\Program Data\Microsoft VS Code\bin;C:\Program Files (x86)\AzurePluginManager;C:\Program Files (x86)\AzurePluginManager;C:\MinGW\bin;C:\Program Files\Redis;C:\apache-maven-3.6.0\apache-maven\src\bin;C:\Program Files\Java\jdk1.8.0_201\bin;C:\msys\10\bin;C:\MinGW\lib\gcc\mingw32\6.3.0\include\c++;C:\Program Files\nodejs;C:\Program Files\Microsoft VS Code\bin;C:\Users\Vinh.Vo\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\orcl\instantclient_12_2;D:\soft\VS Code\Program Data\Microsoft VS Code\bin;C:\MinGW\bin;C:\Users\Vinh.Vo\AppData\Roaming\npm
+
+Yarn version: 
+  1.5.1
+
+Node version: 
+  10.16.3
+
+Platform: 
+  win32 x64
+
+npm manifest: 
+  {
+    "name": "koa-example",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "dev": "nodemon --inspect app.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "babel-cli": "^6.26.0",
+      "babel-core": "^6.26.3",
+      "babel-loader": "^8.0.6",
+      "babel-plugin-transform-async-to-generator": "^6.24.1",
+      "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+      "babel-polyfill": "^6.26.0",
+      "babel-preset-env": "^1.7.0",
+      "babel-preset-es2015": "^6.24.1",
+      "babel-preset-stage-0": "^6.24.1",
+      "babel-watch": "^7.0.0",
+      "dotenv": "^8.1.0",
+      "koa": "^2.8.1",
+      "koa-body": "^4.1.1",
+      "koa-connect": "^2.0.1",
+      "koa-locals": "^0.3.0",
+      "koa-pug": "^4.0.2",
+      "koa-router": "^7.4.0",
+      "koa-sass": "^2.0.0",
+      "koa-static": "^5.0.0",
+      "koa-views": "^6.2.1",
+      "node-sass-middleware": "^0.11.0",
+      "oracledb": "^4.0.1",
+      "pug": "^2.0.4",
+      "sequelize-oracle": "^3.3.2-0.0"
+    },
+    "devDependencies": {
+      "@babel/core": "^7.6.0",
+      "@babel/register": "^7.6.0"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: Command failed.
+  Exit code: 3221225786
+  Command: C:\Windows\system32\cmd.exe
+  Arguments: /d /s /c nodemon --inspect app.js
+  Directory: D:\Projects\Ageta\other_jobs\message_box_ui\source\message_box_ui
+  Output:
+  
+      at ProcessTermError.MessageError (C:\Program Files (x86)\Yarn\lib\cli.js:186:110)
+      at new ProcessTermError (C:\Program Files (x86)\Yarn\lib\cli.js:226:113)
+      at ChildProcess.<anonymous> (C:\Program Files (x86)\Yarn\lib\cli.js:30281:17)
+      at ChildProcess.emit (events.js:198:13)
+      at maybeClose (internal/child_process.js:982:16)
+      at Process.ChildProcess._handle.onexit (internal/child_process.js:259:5)
