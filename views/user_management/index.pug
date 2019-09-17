@@ -2,202 +2,110 @@ extends ../layout
 
 block styles
   style(type='text/css').
-    .demo {
-    width: 400px;
-    height: 400px;
-    border-top: solid 1px #BBB;
-    border-left: solid 1px #BBB;
-    border-bottom: solid 1px #FFF;
-    border-right: solid 1px #FFF;
-    background: #FFF;
-    overflow: scroll;
-    padding: 5px;
+    .history-label {
+      color: #007BFF;
+      font-weight: 500 !important;
+      cursor: pointer;
     }
-    .selected-file-tree-item {
-      background-color: #92a8d1;
-    }
-
-    .split {
-      -webkit-box-sizing: border-box;
-      -moz-box-sizing: border-box;
-      box-sizing: border-box;
-      overflow-y: auto;
-      overflow-x: hidden;
-    }
-    
-    .content {
-      border: 1px solid #C0C0C0;
-      box-shadow: inset 0 1px 2px #e4e4e4;
-      background-color: #fff;
-    }
-    
-    .gutter {
-      background-color: transparent;
-      background-repeat: no-repeat;
-      background-position: 50%;
-    }
-    
-    .gutter.gutter-horizontal {
-      cursor: col-resize;
-      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
-      background-repeat: no-repeat;
-    }
-    
-    .gutter.gutter-vertical {
-      cursor: row-resize;
-      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
-      background-repeat: no-repeat;
-    }
-    
-    .split.split-horizontal,
-    .gutter.gutter-horizontal {
-        height: 100%;
-        float: left;
+    .history-label:hover {
+      color:#453af0;
     }
 
 block content
   include ../partials/spinner
   .container-fluid
     .row
-      .col-md-4
-        .card
-          .card-info
-            .col-md-12
-              .form-horizontal
+      .col-md-8
+        .card.card-default
+          .card-header
+            h3.card-title User
+          .card-body
+            .row
+              .card(style="width: 100%")
                 .card-body
-                  .form-group
-                    label Group Id
-                    .input-group
-                      v-select(v-model='typeSearch' id="typeSearch" :options="configCb" style="width: 100%" :on-change="typeSearchChange")
-                  .form-group
-                    label Task Id
-                    .input-group
-                      v-select(v-model='valueSearch' :options="valueCb" style="width: 100%")
-                  .form-group 
-                    label Description 
-                    .input-group 
-                      input#taskDesc.form-control(v-model='taskDesc' type='text')
                   .text-right
                     .btn-group
                       button.btn.btn-primary(@click="onBtnSearchClick") Search
-                      button.btn.btn-primary(@click="onBtnAddClick") Add
-                      button.btn.btn-primary(@click="onBtnDeleteClick") Delete
-            .col-md-12
-              .card-body.table-responsive.p-0
-                table.table.table-hover#table(style="line-height: 0.45;")
-                  tr
-                    th.text-center Group Id
-                    th.text-center Task Id
-                    th.text-center Description
-                  tr(v-for="config in configs", @click='getTaskDetail(config)')
-                    td.text-center(v-html="config.GROUP_ID")
-                    td.text-center(v-html="config.TASK_ID")
-                    td.text-center(v-html="config.TASK_DESC")
-      .col-md-8
-        .card
-          .card-info
-            .card-body.table-responsive.p-0
-              table.table.table-hover.table-bordered#table1(style="line-height: 0.45;")
+                      button.btn.btn-primary(@click="onAddUser") Add
+                      button.btn.btn-primary(@click="onSaveUser") Save
+                  .row
+                    .col-md-6
+                      .form-group
+                        label User Id
+                        .input-group
+                          input#user_id.form-control(type='text' v-model='userId')
+                    .col-md-6
+                      .form-group
+                        label User Type
+                        .input-group
+                          input#user_type.form-control(type='text' v-model='userType')
+                        
+            .row(style="margin-top: 10px")
+              table.table.table-hover.table-bordered#table_user_list
                 tbody
                   tr
-                    td.text-center Task Id
-                    td.text-center {{task.taskId}}
-                  tr
-                    td.text-center Description
-                    td.text-center {{task.description}}
-                  tr
-                    td.text-center Schedule
-                    td.text-center {{task.schedule}}
-                  tr
-                    td.text-center Source
-                    td.text-center {{task.source}}
-                  tr(v-for="(itemArr, index) in task.filter")
-                    td.text-center(v-if="index == 0", v-bind:rowspan="task.filter.length", style="vertical-align: middle") Filter
-                    td(style="padding: 2px !important")
-                      table(style="width: 100%;")
-                        tbody
-                          tr(v-for="(item, idx) in itemArr")
-                            td.text-right(style="width: 50%") {{item.name}}
-                            td.text-left {{item.value}}
-                  tr(v-for="(item, index) in task.inputBk")
-                    td.text-center(v-if="index == 0", v-bind:rowspan="task.inputBk.length", style="vertical-align: middle") Input Backup
-                    td.text-center {{item}}
-                  tr(v-for="(itemArr, index) in task.converters")
-                    td.text-center(v-if="index == 0", v-bind:rowspan="task.converters.length", style="vertical-align: middle") Converter
-                    td(style="padding: 2px !important")
-                      table(style="width: 100%;")
-                        tbody
-                          tr(v-for="(item, idx) in itemArr")
-                            td.text-right(style="width: 50%") {{item.name}}
-                            td.text-left {{item.value}}
-                  tr(v-for="(item, index) in task.outputBk")
-                    td.text-center(v-if="index == 0", v-bind:rowspan="task.outputBk.length", style="vertical-align: middle") Output Backup
-                    td.text-center {{item}}
-                  tr
-                    td.text-center Destination
-                    td.text-center {{task.destination}}
-  .row
-    #a.split.split-horizontal
-      #c.split.content
-      #d.split.content
-  // Modal New Task
-  #addNewTaskModal.modal.fade(role='dialog')
+                    th.text-center(style="display:none") flag
+                    th.text-center Del
+                    th.text-center system id
+                    th.text-center user id
+                    th.text-center user type
+                    th.text-center updated
+                    th.text-center action
+                  tr(v-for="(user, key) in userList")
+                    td.text-center(colName="FLAG" style="display:none") {{user.FLAG}}
+                    td.text-center(colName="DEL")
+                      input(type="checkbox")
+                    td.text-center(colName="SYSTEM_ID" style="cursor: pointer") {{user.SYSTEM_ID}}
+                    td.text-center.editable-cell(colName="USER_ID" contenteditable="true") {{user.USER_ID}}
+                    td.text-center.editable-cell(colName="USER_TYPE" contenteditable="true") {{user.USER_TYPE}}
+                    td.text-center(colName="UPDATED") {{user.UPDATED}}
+                    td.text-center
+                      label.history-label(v-if="user.SYSTEM_ID !== ''") history
+      .col-md-4
+        .card.card-default
+          .card-header
+            h3.card-title Group
+          .card-body
+            .text-right(style="margin-bottom:10px")
+              .btn-group
+                button.btn.btn-primary(@click="onAddGroup") Add
+                button.btn.btn-primary(@click="onSaveGroup") Save
+           
+            table.table.table-hover.table-bordered#table_group_list
+              tbody
+                tr
+                  th.text-center(style="display:none") FLAG
+                  th.text-center Del
+                  th.text-center(style="display:none") system id
+                  th.text-center group id
+                tr(v-for="group in groupList")
+                  td.text-center(style="display:none" colName="FLAG") {{group.FLAG}}
+                  td.text-center(colName="DEL")
+                    input(type="checkbox")
+                  td.text-center(style="display:none" colName="SYSTEM_ID") {{group.SYSTEM_ID}}
+                  td.text-center(colName="GROUP_ID" v-bind:contenteditable="group.SYSTEM_ID !== '' ? false : true") {{group.GROUP_ID}}
+
+  #userHistoryDialog.modal.fade(role='dialog')
     .modal-dialog
       // Modal content
       .modal-content
         .modal-header
-          h4.modal-title Add New Task
+          h4.modal-title History
           button.close(type='button' data-dismiss='modal') &times;
         .modal-body
           form(role='form')
             .card-body
               .form-group
-                label(for='groupId') Group Id
-                input#groupId.form-control(type='text')
-              .form-group
-                label(for='inputDesc') Description
-                input#inputDesc.form-control(type='text')
-              .form-group
-                label(for='inputFile') Config File
-              .input-group
-                .custom-file
-                  .input-group.input-group-md
-                    input.form-control(type='text' v-model="fileName" readonly)
-                    span.input-group-append
-                      button.btn.btn-info.btn-flat(type='button' @click="openSelectFile") Browse
-        .modal-footer
-          button.btn.btn-default(type='button' @click="addNewTask") Save
-          button.btn.btn-default(type='button' data-dismiss='modal') Close
-  // Modal password
-  #passwordModal.modal.fade(role='dialog')
-    .modal-dialog
-      // Modal content
-      .modal-content
-        .modal-header
-          h4.modal-title Password Confirm
-          button.close(type='button' data-dismiss='modal') &times;
-        .modal-body
-          .card-body
-            .form-group
-              label(for='passInput') Password
-              input#passInput.form-control(type='password' v-on:keyup.enter='checkPassword')
-        .modal-footer
-          button.btn.btn-default(type='button' @click="checkPassword") OK
-          button.btn.btn-default(type='button' data-dismiss='modal') Cancel
-  // Modal choose file
-  #fileModal.modal.fade(role='dialog')
-    .modal-dialog
-      // Modal content
-      .modal-content
-        .modal-header
-          h4.modal-title Select Config File
-          button.close(type='button' data-dismiss='modal') &times;
-        .modal-body
-          .card-body
-            .row
-              .col-md-12
-                .example
-                  #fileTreeDemo_1.demo
+                label System Id
+                input#historySystemId.form-control(type="text" disabled="true")
+              table.table.table-bordered#table_user_history
+                tbody
+                  tr
+                    th.text-center User Id
+                    th.text-center Rec Time
+                  tr(v-for="his in userHistoryList")
+                    td.text-center(colName="USER_ID") {{his.USER_ID}}
+                    td.text-center(colName="REC_TIME") {{his.REC_TIME}}
         .modal-footer
           button.btn.btn-default(type='button' data-dismiss='modal') Close
 block scripts

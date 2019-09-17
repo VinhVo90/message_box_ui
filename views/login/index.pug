@@ -1,0 +1,29 @@
+extends ../login-layout
+
+block styles
+ 
+block content
+  include ../partials/spinner
+  .container-fluid
+    .row
+      .col-md-4
+      .col-md-4
+        .card
+          .card-info
+            .col-md-12
+              .form-horizontal
+                .card-body
+                  #input-form
+                    .form-group
+                      label.control-label(for="username") User name
+                      .input-group
+                        input.form-control(id="username" name="username" style="width: 100%" v-model='username' @keydown="onInputKeyDown")
+                    .form-group
+                      label.control-label(for="password") Password
+                      .input-group
+                        input.form-control(type="password" id="password" name="password" style="width: 100%" v-model='password' @keydown="onInputKeyDown")
+                    .text-right
+                      .btn-group
+                        button.btn.btn-primary(@click="onLogin('asdsdasdasd')") Login
+                  
+block scripts
