@@ -39,6 +39,8 @@ const TIME_UNIT = {
 
 const PASSWORD = '1111';
 
+const API_SERVER = 'http://172.20.120.225:3000';
+
 const CRUD_FLAG = {
   CREATE: 'C',
   RETRIEVE: 'R',
@@ -54,5 +56,6 @@ module.exports = {
   FORMAT,
   PASSWORD,
   TIME_UNIT,
+  API_SERVER
   CRUD_FLAG
 }
