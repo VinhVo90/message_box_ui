@@ -48,6 +48,7 @@ block content
                     th.text-center Del
                     th.text-center system id
                     th.text-center user id
+                    th.text-center password
                     th.text-center user type
                     th.text-center updated
                     th.text-center action
@@ -55,8 +56,9 @@ block content
                     td.text-center(colName="FLAG" style="display:none") {{user.FLAG}}
                     td.text-center(colName="DEL")
                       input(type="checkbox")
-                    td.text-center(colName="SYSTEM_ID" style="cursor: pointer") {{user.SYSTEM_ID}}
+                    td.text-center(colName="SYSTEM_ID" style="cursor: pointer" title="View group list") {{user.SYSTEM_ID}}
                     td.text-center.editable-cell(colName="USER_ID" contenteditable="true") {{user.USER_ID}}
+                    td.text-center.editable-cell(colName="PASSWORD" contenteditable="true") {{user.PASSWORD}}
                     td.text-center.editable-cell(colName="USER_TYPE" contenteditable="true") {{user.USER_TYPE}}
                     td.text-center(colName="UPDATED") {{user.UPDATED}}
                     td.text-center

@@ -6,7 +6,7 @@ const getUsers = async (ctx) => {
   const { userId, userType } = ctx.request.body.params;
 
   let query = `
-  SELECT '${CRUD_FLAG.RETRIEVE}' AS "FLAG", U.SYSTEM_ID, U.USER_ID, U.ACCESS_CONTROL AS USER_TYPE, TO_CHAR(HIS.REC_TIME, 'DD MON YYYY, HH12:MI AM') AS "UPDATED"
+  SELECT '${CRUD_FLAG.RETRIEVE}' AS "FLAG", U.SYSTEM_ID, U.USER_ID, U.PASSWORD, U.ACCESS_CONTROL AS USER_TYPE, TO_CHAR(HIS.REC_TIME, 'DD MON YYYY, HH12:MI AM') AS "UPDATED"
   FROM USER_ACCOUNTS U,
     (SELECT SYSTEM_ID, REC_TIME
     FROM (SELECT SYSTEM_ID, MAX(REC_TIME) AS REC_TIME FROM  USER_ACCOUNT_HISTORY
@@ -79,7 +79,7 @@ const createUser = async (user) => {
     replacements: {
       userId: user.USER_ID,
       userType: user.USER_TYPE,
-      passWord: '123',
+      passWord: user.PASSWORD,
     }
   }).then(result => {
     
@@ -97,7 +97,7 @@ const updateUser = async (user) => {
       systemId: user.SYSTEM_ID,
       userId: user.USER_ID,
       userType: user.USER_TYPE,
-      passWord: '123'
+      passWord: user.PASSWORD
     }
   }).then(result => {
     
