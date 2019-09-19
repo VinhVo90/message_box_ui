@@ -2,7 +2,7 @@ extends ../layout
 
 block styles
   style(type='text/css').
-    div.recipientModal {
+    div.senderModal {
       width: 900px;
       max-width: 900px;
     }
@@ -20,8 +20,8 @@ block content
             form
               .form-row
                 .form-group.col-md-6
-                  label(for='recipientText') Recipient
-                  input#recipientText.form-control(type='text' placeholder='Recipient', v-model='searchData.recipient')
+                  label(for='recipientText') Sender
+                  input#recipientText.form-control(type='text' placeholder='Sender', v-model='searchData.sender')
                 .form-group.col-md-6
                   label(for='groupText') Group
                   input#groupText.form-control(type='text' placeholder='Group', v-model='searchData.group')
@@ -40,17 +40,17 @@ block content
         table#messageTable.table.table-bordered.table-hover
           thead
             tr
-              th(scope='col') Recipient
+              th(scope='col') Sender
               th(scope='col') Group
               th(scope='col') Send Time
               th(scope='col') Recv Time
               th(scope='col') Message Name
-    #recipientDialog.modal.fade(role='dialog')
-      .modal-dialog.recipientModal
+    #senderDialog.modal.fade(role='dialog')
+      .modal-dialog.senderModal
         // Modal content
         .modal-content
           .modal-header
-            h4.modal-title Recipient Modal
+            h4.modal-title Sender Modal
             button.close(type='button' data-dismiss='modal') &times;
           .modal-body
             .card-body
@@ -58,9 +58,9 @@ block content
                 .col-md-12
                   form#form-section
                     .form-group.row
-                      label.col-sm-2.col-form-label(for='recipientText') Recipient
+                      label.col-sm-2.col-form-label(for='senderText') Sender
                       .col-sm-4
-                        input#recipientText.form-control(type='text' placeholder='Recipient', v-model='selectedMessage.RECIPIENT_ID')
+                        input#senderText.form-control(type='text' placeholder='Sender', v-model='selectedMessage.SENDER_ID')
                       label.col-sm-2.col-form-label(for='messageGroupText') Message Group
                       .col-sm-4
                         input#messageGroupText.form-control(type='text' placeholder='Message Group', v-model='selectedMessage.GROUP_ID')
@@ -72,8 +72,5 @@ block content
                       label.col-sm-2.col-form-label(for='contentMessageText') Content
                       .col-sm-10
                         textarea#contentMessageText.form-control(rows='7', v-model='selectedMessage.CONTENT')
-          .modal-footer
-            button.btn.btn-default(type='button' data-dismiss='modal') Cancel
-            button.btn.btn-default(type='button', @click="onSendClick") Send
-            
+
 block scripts

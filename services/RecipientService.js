@@ -19,8 +19,8 @@ const searchMessageTransaction = async (ctx) => {
   if (searchData.recvTime != null) {
     query += ` AND t.RECV_TIME BETWEEN :recvTimeFrom AND :recvTimeTo`;
   }
-  if (searchData.recipient != '') {
-    query += ` AND t.RECIPIENT_ID = :recipient`;
+  if (searchData.sender != '') {
+    query += ` AND t.SENDER_ID = :sender`;
   }
   if (searchData.group != '') {
     query += ` AND t.GROUP_ID = :group`;
@@ -37,26 +37,6 @@ const searchMessageTransaction = async (ctx) => {
   })
 }
 
-const sendMessage = async (ctx) => {
-  let formData = ctx.request.body;
-  let sender = formData['sender'];
-  let recipient = formData['recipient'];
-  let group = formData['group'];
-  let messageData = {name : formData['NAME'], content : formData['CONTENT'], authInfo : ''};
-
-  await axios.post(`${CONSTANT.API_SERVER}/msgbox/${sender}/send/${recipient}/${group}`, messageData)
-      .then((response) => {
-        ctx.body = response;
-      })
-      .catch((error) => {
-        ctx.body = {
-          error : error.response.status,
-          data : error.response.data
-        };
-      });
-}
-
 module.exports = {
-  searchMessageTransaction,
-  sendMessage
+  searchMessageTransaction
 }

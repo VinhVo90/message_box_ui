@@ -18,7 +18,7 @@ window.app = new Vue({
         recvTime: null,
         recvTimeFrom: null,
         recvTimeTo: null,
-        recipient: '',
+        sender: '',
         group: '',
         messageName: ''
       },
@@ -47,7 +47,7 @@ window.app = new Vue({
         this.searchData.sendTimeTo = recvDate.clone().add(1, 'days').valueOf() - 1;
       }
 
-      axios.post('/sender/search-message-transaction', this.searchData).then((response) => {
+      axios.post('/recipient/search-message-transaction', this.searchData).then((response) => {
         this.waiting = false;
         let data = response.data.map((item, index, array) => {
           if (item['SEND_TIME'] != '' && item['SEND_TIME'] != null) {
@@ -69,7 +69,7 @@ window.app = new Vue({
         let table = $('#messageTable').DataTable({
           data: response.data,
           columns: [
-            {data : 'RECIPIENT_ID'},
+            {data : 'SENDER_ID'},
             {data : 'GROUP_ID'},
             {data : 'SEND_TIME_FORMAT'},
             {data : 'RECV_TIME_FORMAT'},
@@ -82,7 +82,7 @@ window.app = new Vue({
         $('#messageTable').on('click', 'tbody tr', function(event) {
           let data = table.row(this).data();
           self.selectedMessage = Object.assign({}, data);
-          $("#recipientDialog").modal("show");
+          $("#senderDialog").modal("show");
         })
 
         this.messageData = response.data;
@@ -94,37 +94,7 @@ window.app = new Vue({
 
     onRowClick(message) {
       this.selectedMessage = Object.assign({}, message);
-      $("#recipientDialog").modal("show");
-    },
-
-    onSendClick() {
-      this.waiting = true;
-
-      const postData = {
-        sender : 'SENDER',
-        recipient : this.selectedMessage['RECIPIENT_ID'],
-        group : this.selectedMessage['GROUP_ID'],
-        fileName : this.selectedMessage['NAME'],
-        fileContent : this.selectedMessage['CONTENT']
-      }
-
-      axios.post('/sender/send-message', postData).then((response) => {
-        this.waiting = false;
-        let data = response.data;
-        if (data.error) {
-          toastr.error(data.data)
-        }
-        else {
-          $("#recipientDialog").modal("hide");
-          toastr.success('Send success');
-        }
-      }).catch((error) => {
-        this.waiting = false;
-        console.log(error);
-      });
-      setTimeout(() => {
-        this.waiting = false;
-      }, 30000);
+      $("#senderDialog").modal("show");
     }
   }
 });

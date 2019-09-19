@@ -4,6 +4,7 @@ const HomeController = require('../controllers/HomeController');
 const SenderController = require('../controllers/SenderController');
 const loginController =  require('../controllers/LoginController');
 const userManagementController = require('../controllers/UserManagementController');
+const RecipientController = require('../controllers/RecipientController');
 
 router.get('/', HomeController.getIndex);
 
@@ -27,6 +28,14 @@ router.post('/sender/search-message-transaction', async ctx => {
 
 router.post('/sender/send-message', async ctx => {
   await SenderController.sendMessage(ctx);
+})
+
+router.get('/recipient', async ctx => {
+  await RecipientController.getIndex(ctx);
+})
+
+router.post('/recipient/search-message-transaction', async ctx => {
+  await RecipientController.searchMessageTransaction(ctx);
 })
 
 module.exports = router;
