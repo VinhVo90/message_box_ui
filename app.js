@@ -31,6 +31,8 @@ app.use(bodyParser({
    urlencoded: true
 }));
 
+app.keys = ['Shh, its a secret!'];
+
 app.use(session(CONFIG, app));
 // or if you prefer all default config, just use => app.use(session(app));
 
@@ -44,6 +46,7 @@ app.use(async (ctx, next) => {
       ctx.state.activePage = "";
     }
   }
+
   await next();
 })
 

@@ -18,12 +18,12 @@ window.app = new Vue({
   methods: {
     onLogin() {
       if (this.username === "") {
-        alert('Please input username');
+        warningMsg('Please input username');
         return;
       }
 
       if (this.password === "") {
-        alert('Please input password');
+        warningMsg('Please input password');
         return;
       }
 
@@ -38,7 +38,7 @@ window.app = new Vue({
         setTimeout(function() {
           console.log(response.data);
           if (response.data.length === 0) {
-            alert('Incorrect usename/password');
+            warningMsg('Incorrect usename/password');
             return;
           }
 
@@ -46,7 +46,9 @@ window.app = new Vue({
         },100);
         
       }).catch(ex => {
+        this.waiting = false;
         console.log(ex);
+        errorMsg(ex);
       });
 
       setTimeout(() => {

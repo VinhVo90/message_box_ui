@@ -6,9 +6,7 @@ const loginController =  require('../controllers/LoginController');
 const userManagementController = require('../controllers/UserManagementController');
 const RecipientController = require('../controllers/RecipientController');
 
-router.get('/', async ctx => {
-  HomeController.getIndex(ctx);
-})
+router.get('/', HomeController.getIndex);
 
 router.get('/login', loginController.getIndex);
 router.post('/api/getUserinfo', loginController.getUserInfo);
