@@ -14,6 +14,8 @@ const getUserInfo = async function (ctx) {
     type: Sequelize.QueryTypes.SELECT
   }).then(result => {
     if (result.length > 0) {
+      ctx.cookies.set('username', username, {httpOnly: true});
+      ctx.session.username = username;
       ctx.response.redirect('/user_management');
     } else {
       ctx.body = result;
