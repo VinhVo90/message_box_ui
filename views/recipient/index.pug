@@ -1,0 +1,76 @@
+extends ../layout
+
+block styles
+  style(type='text/css').
+    div.senderModal {
+      width: 900px;
+      max-width: 900px;
+    }
+
+block content
+  include ../partials/spinner
+  .container-fluid
+    .row.justify-content-center.pt-2
+      .col-10.border.rounded.pt-2.mb-2
+        .row
+          .col-12
+            button.btn.btn-primary.float-right(type='button' data-toggle='button' aria-pressed='false' autocomplete='off', @click="onBtnFindClick") Find
+        .row
+          .col-12
+            form
+              .form-row
+                .form-group.col-md-6
+                  label(for='recipientText') Sender
+                  input#recipientText.form-control(type='text' placeholder='Sender', v-model='searchData.sender')
+                .form-group.col-md-6
+                  label(for='groupText') Group
+                  input#groupText.form-control(type='text' placeholder='Group', v-model='searchData.group')
+              .form-row
+                .form-group.col-md-6
+                  label(for='sendTimeDate') Send Time
+                  datepicker#sendTimeDate(:format='datePickerFormat', v-model='searchData.sendTime', :calendar-button="true", calendar-button-icon="fa fa-calendar", :clear-button="true", clear-button-icon="fa fa-times", :bootstrap-styling="true")
+                .form-group.col-md-6
+                  label(for='recvTimeDate') Recv Time
+                  datepicker#recvTimeDate(:format='datePickerFormat', v-model='searchData.recvTime', :calendar-button="true", calendar-button-icon="fa fa-calendar", :clear-button="true", clear-button-icon="fa fa-times", :bootstrap-styling="true")
+              .form-row
+                .form-group.col-md-6
+                  label(for='messageNameText') Message Name
+                  input#messageNameText.form-control(type='text' placeholder='Message Name', v-model='searchData.messageName')
+      .col-10.border.rounded.pt-2.mb-2
+        table#messageTable.table.table-bordered.table-hover
+          thead
+            tr
+              th(scope='col') Sender
+              th(scope='col') Group
+              th(scope='col') Send Time
+              th(scope='col') Recv Time
+              th(scope='col') Message Name
+    #senderDialog.modal.fade(role='dialog')
+      .modal-dialog.senderModal
+        // Modal content
+        .modal-content
+          .modal-header
+            h4.modal-title Sender Modal
+            button.close(type='button' data-dismiss='modal') &times;
+          .modal-body
+            .card-body
+              .row
+                .col-md-12
+                  form#form-section
+                    .form-group.row
+                      label.col-sm-2.col-form-label(for='senderText') Sender
+                      .col-sm-4
+                        input#senderText.form-control(type='text' placeholder='Sender', v-model='selectedMessage.SENDER_ID')
+                      label.col-sm-2.col-form-label(for='messageGroupText') Message Group
+                      .col-sm-4
+                        input#messageGroupText.form-control(type='text' placeholder='Message Group', v-model='selectedMessage.GROUP_ID')
+                    .form-group.row
+                      label.col-sm-2.col-form-label(for='messageNameText') Message Name
+                      .col-sm-10
+                        input#messageNameText.form-control(type='text' placeholder='Message Name', v-model='selectedMessage.NAME')
+                    .form-group.row
+                      label.col-sm-2.col-form-label(for='contentMessageText') Content
+                      .col-sm-10
+                        textarea#contentMessageText.form-control(rows='7', v-model='selectedMessage.CONTENT')
+
+block scripts
