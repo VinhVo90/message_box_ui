@@ -40,4 +40,12 @@ router.post('/recipient/search-message-transaction', async ctx => {
   await RecipientController.searchMessageTransaction(ctx);
 })
 
+router.get('/403', async ctx => {
+  await ctx.render('forbidden');
+})
+
+router.get('/404', async ctx => {
+  await ctx.render('notFound');
+})
+
 module.exports = router;

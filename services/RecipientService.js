@@ -1,7 +1,5 @@
 const models = require('../models');
 const Sequelize = require('sequelize-oracle')
-const axios = require('axios');
-const CONSTANT = require('../configs/constants');
 const oracledb = require('oracledb');
 oracledb.fetchAsString = [oracledb.CLOB];
 

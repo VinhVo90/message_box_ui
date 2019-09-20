@@ -35,6 +35,9 @@ window.app = new Vue({
         }
       }).then((response) => {
         this.waiting = false;
+        if (response.data.authenticated) {
+          window.location.replace("/");
+        }
         setTimeout(function() {
           console.log(response.data);
           if (response.data.length === 0) {

@@ -9,6 +9,9 @@ var bodyParser = require('koa-body');
 const db = require('./models');
 const sass = require('./configs/sass.js');
 const path = require('path');
+const {authenticate, errorHandler} = require('./configs/authenticate');
+
+app.keys = ['secret', 'key'];
 
 const CONFIG = {
   key: 'koa:sess', /** (string) cookie key (default is koa:sess) */
@@ -46,6 +49,9 @@ app.use(async (ctx, next) => {
   }
   await next();
 })
+
+app.use(authenticate);
+app.use(errorHandler);
 
 new Pug({
   viewPath: path.resolve(__dirname, './views'),
