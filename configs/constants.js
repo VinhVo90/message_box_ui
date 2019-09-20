@@ -48,6 +48,27 @@ const CRUD_FLAG = {
   DELETE: 'D'
 }
 
+const USER_PERMISSION = {
+  viewer : [
+    {name : 'sender', url : '/sender', text : 'Sender'}
+  ],
+  operator : [
+    {name : 'sender', url : '/sender', text : 'Sender'},
+    {name : 'recipient', url : '/recipient', text : 'Recipient'}
+  ],
+  admin : [
+    {name : 'user_management', url : '/user_management', text : 'User Management'},
+    {name : 'sender', url : '/sender', text : 'Sender'},
+    {name : 'recipient', url : '/recipient', text : 'Recipient'}
+  ]
+}
+
+const USERTYPE = {
+  SENDER : 'sender',
+  OPERATOR : 'operator',
+  ADMIN : 'admin'
+}
+
 module.exports = {
   ENV,
   PORT,
@@ -57,5 +78,7 @@ module.exports = {
   PASSWORD,
   TIME_UNIT,
   API_SERVER,
-  CRUD_FLAG
+  CRUD_FLAG,
+  USER_PERMISSION,
+  USERTYPE
 }

@@ -3,12 +3,6 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
     span.navbar-toggler-icon
   #navbarNav.collapse.navbar-collapse
     ul.navbar-nav
-      li.nav-item
-        a.nav-link(class=activePage=="user_management" ? "active" : "", href='/user_management')
-          | User Management
-      li.nav-item
-        a.nav-link(class=activePage=="sender" ? "active" : "", href='/sender')
-          | Sender
-      li.nav-item
-        a.nav-link(class=activePage=="recipient" ? "active" : "", href='/recipient')
-          | Recipient
+      each val in user.permission
+        li.nav-item
+          a.nav-link(class=activePage==val.name ? "active" : "", href=val.url) #{val.text}

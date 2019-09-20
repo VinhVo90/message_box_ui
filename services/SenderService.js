@@ -38,8 +38,9 @@ const searchMessageTransaction = async (ctx) => {
 }
 
 const sendMessage = async (ctx) => {
+  let user = ctx.state.user;
   let formData = ctx.request.body;
-  let sender = formData['sender'];
+  let sender = user['USER_ID'];
   let recipient = formData['recipient'];
   let group = formData['group'];
   let messageData = {name : formData['NAME'], content : formData['CONTENT'], authInfo : ''};
