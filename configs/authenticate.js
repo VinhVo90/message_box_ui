@@ -30,7 +30,7 @@ let authenticate = async function(ctx, next) {
       const segments = ctx.request.path.split("/");
       const name = segments[1];
       const permission = _.find(user['permission'], { name });
-      if (typeof permission == 'undefined') {
+      if (typeof permission == 'undefined' && name != 'api') {
         ctx.state.forbidden = true;
       }
       await next();
