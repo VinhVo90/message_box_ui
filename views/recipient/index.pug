@@ -13,7 +13,7 @@ block content
     .row.justify-content-center.pt-2
       .col-10.border.rounded.pt-2.mb-2
         .row
-          .col-12
+          .col-12.text-right
             button.btn.btn-primary.float-right(type='button' data-toggle='button' aria-pressed='false' autocomplete='off', @click="onBtnFindClick") Find
         .row
           .col-12
@@ -36,15 +36,20 @@ block content
                 .form-group.col-md-6
                   label(for='messageNameText') Message Name
                   input#messageNameText.form-control(type='text' placeholder='Message Name', v-model='searchData.messageName')
+        .row
+          .col-12.text-right
+            button.btn.btn-primary.mr-2(type='button' data-toggle='button' aria-pressed='false' autocomplete='off', @click="onMarkAsRead") Mark As Read
       .col-10.border.rounded.pt-2.mb-2
         table#messageTable.table.table-bordered.table-hover
           thead
             tr
+              th(scope='col') 
               th(scope='col') Sender
               th(scope='col') Group
               th(scope='col') Send Time
               th(scope='col') Recv Time
               th(scope='col') Message Name
+              th(scope='col') Unread
     #senderDialog.modal.fade(role='dialog')
       .modal-dialog.senderModal
         // Modal content

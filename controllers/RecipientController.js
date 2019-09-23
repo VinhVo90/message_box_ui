@@ -10,7 +10,12 @@ const searchMessageTransaction = async (ctx) => {
   await RecipientService.searchMessageTransaction(ctx);
 }
 
+const markAsRead = async (ctx) => {
+  await RecipientService.markAsRead(ctx);
+}
+
 module.exports = {
   getIndex,
-  searchMessageTransaction
+  searchMessageTransaction,
+  markAsRead
 }

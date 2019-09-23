@@ -92,6 +92,16 @@ window.app = new Vue({
       }, 30000);
     },
 
+    onSendNewMessage() {
+      this.selectedMessage = {
+        RECIPIENT_ID : '',
+        GROUP_ID : '',
+        NAME : '',
+        CONTENT : ''
+      }
+      $("#recipientDialog").modal("show");
+    },
+
     onRowClick(message) {
       this.selectedMessage = Object.assign({}, message);
       $("#recipientDialog").modal("show");

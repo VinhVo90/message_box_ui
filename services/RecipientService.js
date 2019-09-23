@@ -1,3 +1,5 @@
+const axios = require('axios');
+const CONSTANT = require('../configs/constants');
 const models = require('../models');
 const Sequelize = require('sequelize-oracle')
 const oracledb = require('oracledb');
@@ -35,6 +37,27 @@ const searchMessageTransaction = async (ctx) => {
   })
 }
 
+const markAsRead = async (ctx) => {
+  let user = ctx.state.user;
+  let sender = user['USER_ID'];
+  let messages = ctx.request.body;
+
+  for (let i = 0; i < messages.length; i++) {
+    let message = messages[i];
+    await axios.post(`${CONSTANT.API_SERVER}/msgbox/${sender}/recv/${message['TX_ID']}`, {authInfo : ''})
+      .then((response) => {
+        ctx.body = response.data;
+      })
+      .catch((error) => {
+        ctx.body = {
+          error : error.response.status,
+          data : error.response.data
+        };
+      });
+  }
+}
+
 module.exports = {
-  searchMessageTransaction
+  searchMessageTransaction,
+  markAsRead
 }

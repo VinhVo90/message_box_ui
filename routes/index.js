@@ -38,6 +38,10 @@ router.post('/recipient/search-message-transaction', async ctx => {
   await RecipientController.searchMessageTransaction(ctx);
 })
 
+router.post('/recipient/mark-as-read', async ctx => {
+  await RecipientController.markAsRead(ctx);
+})
+
 router.get('/403', async ctx => {
   await ctx.render('forbidden');
 })

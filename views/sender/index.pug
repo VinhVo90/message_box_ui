@@ -13,8 +13,9 @@ block content
     .row.justify-content-center.pt-2
       .col-10.border.rounded.pt-2.mb-2
         .row
-          .col-12
-            button.btn.btn-primary.float-right(type='button' data-toggle='button' aria-pressed='false' autocomplete='off', @click="onBtnFindClick") Find
+          .col-12.text-right
+              button.btn.btn-primary.mr-2(type='button' data-toggle='button' aria-pressed='false' autocomplete='off', @click="onSendNewMessage") Send New Message
+              button.btn.btn-primary(type='button' data-toggle='button' aria-pressed='false' autocomplete='off', @click="onBtnFindClick") Find
         .row
           .col-12
             form

@@ -69,23 +69,55 @@ window.app = new Vue({
         let table = $('#messageTable').DataTable({
           data: response.data,
           columns: [
+            {
+              "targets": -1,
+              "data": null,
+              "defaultContent": `<input type="checkbox" class="mark-as-read">`
+            },
             {data : 'SENDER_ID'},
             {data : 'GROUP_ID'},
             {data : 'SEND_TIME_FORMAT'},
             {data : 'RECV_TIME_FORMAT'},
-            {data : 'NAME'}
+            {data : 'NAME'},
+            {data : 'RECV_TIME', render: function (data, type, row, meta ) {
+              if (data == '' || data == null){
+                return `<input type="checkbox" disabled>`;
+              } else {
+                return `<input type="checkbox" disabled checked>`;
+              }
+            }}
           ],
           bDestroy: true,
           pagingType: 'full_numbers'
         });
 
-        $('#messageTable').on('click', 'tbody tr', function(event) {
-          let data = table.row(this).data();
-          self.selectedMessage = Object.assign({}, data);
-          $("#senderDialog").modal("show");
-        })
+        $('#example tbody').on( 'click', 'button', function () {
+          table.row( $(this).parents('tr') ).data();
+        });
+
+        $('#messageTable').on('click', 'input[type="checkbox"].mark-as-read', function(event) {
+          let data = table.row( $(this).parents('tr') ).data();
+          event.stopPropagation();
+        });
 
         this.messageData = response.data;
+      });
+      setTimeout(() => {
+        this.waiting = false;
+      }, 30000);
+    },
+
+    onMarkAsRead() {
+      let data = [];
+      $( 'input[type="checkbox"].mark-as-read:checked' ).each(function( index ) {
+        let rowData = $('#messageTable').DataTable().row( $(this).parents('tr') ).data();
+        data.push(rowData);
+      });
+      this.waiting = true;
+
+      axios.post('/recipient/mark-as-read', data).then((response) => {
+        this.waiting = false;
+        toastr.success('Done');
       });
       setTimeout(() => {
         this.waiting = false;
