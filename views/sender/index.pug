@@ -21,23 +21,22 @@ block content
           .col-12
             form
               .form-row
-                .form-group.col-md-6
+                .form-group.col-md-4
                   label(for='recipientText') Recipient
                   input#recipientText.form-control(type='text' placeholder='Recipient', v-model='searchData.recipient')
-                .form-group.col-md-6
+                .form-group.col-md-4
                   label(for='groupText') Group
                   input#groupText.form-control(type='text' placeholder='Group', v-model='searchData.group')
-              .form-row
-                .form-group.col-md-6
-                  label(for='sendTimeDate') Send Time
-                  datepicker#sendTimeDate(:format='datePickerFormat', v-model='searchData.sendTime', :calendar-button="true", calendar-button-icon="fa fa-calendar", :clear-button="true", clear-button-icon="fa fa-times", :bootstrap-styling="true")
-                .form-group.col-md-6
-                  label(for='recvTimeDate') Recv Time
-                  datepicker#recvTimeDate(:format='datePickerFormat', v-model='searchData.recvTime', :calendar-button="true", calendar-button-icon="fa fa-calendar", :clear-button="true", clear-button-icon="fa fa-times", :bootstrap-styling="true")
-              .form-row
-                .form-group.col-md-6
+                .form-group.col-md-4
                   label(for='messageNameText') Message Name
                   input#messageNameText.form-control(type='text' placeholder='Message Name', v-model='searchData.messageName')
+              .form-row
+                .form-group.col-md-4
+                  label(for='sendTimeDate') Send Time
+                  datepicker#sendTimeDate(:format='datePickerFormat', v-model='searchData.sendTime', :calendar-button="true", calendar-button-icon="fa fa-calendar", :clear-button="true", clear-button-icon="fa fa-times", :bootstrap-styling="true")
+                .form-group.col-md-4
+                  label(for='recvTimeDate') Recv Time
+                  datepicker#recvTimeDate(:format='datePickerFormat', v-model='searchData.recvTime', :calendar-button="true", calendar-button-icon="fa fa-calendar", :clear-button="true", clear-button-icon="fa fa-times", :bootstrap-styling="true")
       .col-10.border.rounded.pt-2.mb-2
         table#messageTable.table.table-bordered.table-hover
           thead

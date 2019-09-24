@@ -50,7 +50,7 @@ const CRUD_FLAG = {
 
 const USER_PERMISSION = {
   viewer : [
-    {name : 'sender', url : '/sender', text : 'Sender'}
+    {name : 'recipient', url : '/recipient', text : 'Recipient'}
   ],
   operator : [
     {name : 'sender', url : '/sender', text : 'Sender'},
