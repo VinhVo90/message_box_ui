@@ -31,7 +31,7 @@ window.app = new Vue({
   },
   methods: {
 
-    onBtnFindClick() {
+    onBtnSearchClick() {
       this.waiting = true;
       let self = this;
 
