@@ -53,7 +53,8 @@ let errorHandler = async function(ctx, next) {
       }
     }
   } catch (err) {
-    await ctx.response.redirect('/404');
+    console.log(err);
+    ctx.body = {error : err};
   }
 }
 
