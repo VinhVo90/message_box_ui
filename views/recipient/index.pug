@@ -14,8 +14,9 @@ block content
       .col-10.border.rounded.pt-2.mb-2
         .row
           .col-12.text-right
-            button.btn.btn-primary.mr-2(type='button' data-toggle='button' aria-pressed='false' autocomplete='off', @click="onMarkAsRead") Mark As Read
-            button.btn.btn-primary.float-right(type='button' data-toggle='button' aria-pressed='false' autocomplete='off', @click="onBtnFindClick") Find
+            .btn-group
+              button.btn.btn-primary(type='button' data-toggle='button' aria-pressed='false' autocomplete='off', @click="onBtnFindClick") Search
+              button.btn.btn-primary(type='button' data-toggle='button' aria-pressed='false' autocomplete='off', @click="onMarkAsRead") Mark As Read
         .row
           .col-12
             form
