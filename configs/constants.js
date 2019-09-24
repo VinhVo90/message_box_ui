@@ -39,7 +39,7 @@ const TIME_UNIT = {
 
 const PASSWORD = '1111';
 
-const API_SERVER = 'http://172.20.120.225:3000';
+const API_SERVER = 'http://172.20.130.104:3001';
 
 const CRUD_FLAG = {
   CREATE: 'C',

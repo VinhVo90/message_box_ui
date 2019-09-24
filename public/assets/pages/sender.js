@@ -31,7 +31,7 @@ window.app = new Vue({
   },
   methods: {
 
-    onBtnFindClick() {
+    onBtnSearchClick() {
       this.waiting = true;
       let self = this;
 
@@ -90,6 +90,16 @@ window.app = new Vue({
       setTimeout(() => {
         this.waiting = false;
       }, 30000);
+    },
+
+    onSendNewMessage() {
+      this.selectedMessage = {
+        RECIPIENT_ID : '',
+        GROUP_ID : '',
+        NAME : '',
+        CONTENT : ''
+      }
+      $("#recipientDialog").modal("show");
     },
 
     onRowClick(message) {

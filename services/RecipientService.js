@@ -1,3 +1,5 @@
+const axios = require('axios');
+const CONSTANT = require('../configs/constants');
 const models = require('../models');
 const Sequelize = require('sequelize-oracle')
 const oracledb = require('oracledb');
@@ -6,10 +8,13 @@ oracledb.fetchAsString = [oracledb.CLOB];
 /**search message by send_time, recv_time, message name, group, recipient */
 const searchMessageTransaction = async (ctx) => {
   let searchData = ctx.request.body;
+  let user = ctx.state.user;
+  searchData['recipient'] = user['USER_ID'];
 
   let query = `SELECT t.TX_ID, t.SENDER_ID, t.RECIPIENT_ID, t.GROUP_ID, t.MSG_ID, t.SEND_TIME, t.RECV_TIME, m.NAME, m.CONTENT
               FROM transactions t, messages m
-              WHERE t.msg_id = m.msg_id`
+              WHERE t.msg_id = m.msg_id
+              AND t.RECIPIENT_ID = :recipient`;
   
   if (searchData.sendTime != null) {
     query += ` AND t.SEND_TIME BETWEEN :sendTimeFrom AND :sendTimeTo`;
@@ -35,6 +40,27 @@ const searchMessageTransaction = async (ctx) => {
   })
 }
 
+const markAsRead = async (ctx) => {
+  let user = ctx.state.user;
+  let recipient = user['USER_ID'];
+  let messages = ctx.request.body;
+
+  for (let i = 0; i < messages.length; i++) {
+    let message = messages[i];
+    await axios.post(`${CONSTANT.API_SERVER}/msgbox/${recipient}/recv/${message['TX_ID']}`, {authInfo : ''})
+      .then((response) => {
+        ctx.body = response.data;
+      })
+      .catch((error) => {
+        ctx.body = {
+          error : error.response.status,
+          data : error.response.data
+        };
+      });
+  }
+}
+
 module.exports = {
-  searchMessageTransaction
+  searchMessageTransaction,
+  markAsRead
 }

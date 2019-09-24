@@ -13,8 +13,10 @@ block content
     .row.justify-content-center.pt-2
       .col-10.border.rounded.pt-2.mb-2
         .row
-          .col-12
-            button.btn.btn-primary.float-right(type='button' data-toggle='button' aria-pressed='false' autocomplete='off', @click="onBtnFindClick") Find
+          .col-12.text-right
+            .btn-group
+              button.btn.btn-primary(type='button' data-toggle='button' aria-pressed='false' autocomplete='off', @click="onBtnSearchClick") Search
+              button.btn.btn-primary(type='button' data-toggle='button' aria-pressed='false' autocomplete='off', @click="onMarkAsRead") Mark As Read
         .row
           .col-12
             form
@@ -40,11 +42,15 @@ block content
         table#messageTable.table.table-bordered.table-hover
           thead
             tr
+              th(scope='col') 
+                input#checkboxAll(type='checkbox' disabled)
+                | &nbsp All
               th(scope='col') Sender
               th(scope='col') Group
               th(scope='col') Send Time
               th(scope='col') Recv Time
               th(scope='col') Message Name
+              th(scope='col') Status
     #senderDialog.modal.fade(role='dialog')
       .modal-dialog.senderModal
         // Modal content

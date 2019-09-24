@@ -7,11 +7,14 @@ oracledb.fetchAsString = [oracledb.CLOB];
 
 /**search message by send_time, recv_time, message name, group, recipient */
 const searchMessageTransaction = async (ctx) => {
+  let user = ctx.state.user;
   let searchData = ctx.request.body;
+  searchData['sender'] = user['USER_ID'];
 
   let query = `SELECT t.TX_ID, t.SENDER_ID, t.RECIPIENT_ID, t.GROUP_ID, t.MSG_ID, t.SEND_TIME, t.RECV_TIME, m.NAME, m.CONTENT
               FROM transactions t, messages m
-              WHERE t.msg_id = m.msg_id`
+              WHERE t.msg_id = m.msg_id
+              AND t.SENDER_ID = :sender`;
   
   if (searchData.sendTime != null) {
     query += ` AND t.SEND_TIME BETWEEN :sendTimeFrom AND :sendTimeTo`;
@@ -43,11 +46,11 @@ const sendMessage = async (ctx) => {
   let sender = user['USER_ID'];
   let recipient = formData['recipient'];
   let group = formData['group'];
-  let messageData = {name : formData['NAME'], content : formData['CONTENT'], authInfo : ''};
+  let messageData = {name : formData['fileName'], content : formData['fileContent'], authInfo : ''};
 
   await axios.post(`${CONSTANT.API_SERVER}/msgbox/${sender}/send/${recipient}/${group}`, messageData)
       .then((response) => {
-        ctx.body = response;
+        ctx.body = response.data;
       })
       .catch((error) => {
         ctx.body = {
