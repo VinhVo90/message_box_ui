@@ -112,15 +112,20 @@ window.app = new Vue({
         $('#messageTable').on('click', 'tbody tr', function(event) {
           let data = table.row(this).data();
           if (typeof data != 'undefined') {
-            self.selectedMessage = Object.assign({}, data);
-            this.waiting = true;
-            axios.post('/recipient/mark-as-read', [data]).then((response) => {
-              this.waiting = false;
+            if (data['RECV_TIME'] == '' || data['RECV_TIME'] != null) {
+              self.selectedMessage = Object.assign({}, data);
+              this.waiting = true;
+              axios.post('/recipient/mark-as-read', [data]).then((response) => {
+                this.waiting = false;
+                $("#senderDialog").modal("show");
+              });
+              setTimeout(() => {
+                this.waiting = false;
+              }, 30000);
+            } else {
+              self.selectedMessage = Object.assign({}, data);
               $("#senderDialog").modal("show");
-            });
-            setTimeout(() => {
-              this.waiting = false;
-            }, 30000);
+            }
           }
         })
 
