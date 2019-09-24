@@ -43,7 +43,9 @@ let errorHandler = async function(ctx, next) {
     await next()
     const status = ctx.status || 404
     if (status == 404) {
-      await ctx.response.redirect('/404');
+      if (!ctx.request.path.endsWith(".map") && !ctx.request.path.endsWith(".ico")) {
+        await ctx.response.redirect('/404');
+      }
     } else {
       const forbidden = ctx.state.forbidden;
       if (forbidden) {
