@@ -70,9 +70,9 @@ window.app = new Vue({
           data: response.data,
           columns: [
             {
-              "targets": -1,
               "data": null,
-              "defaultContent": `<input type="checkbox" class="mark-as-read">`
+              "defaultContent": `<input type="checkbox" class="mark-as-read">`,
+              "orderable": false
             },
             {data : 'SENDER_ID'},
             {data : 'GROUP_ID'},
@@ -81,19 +81,47 @@ window.app = new Vue({
             {data : 'NAME'},
             {data : 'RECV_TIME', render: function (data, type, row, meta ) {
               if (data == '' || data == null){
-                return `<input type="checkbox" disabled>`;
+                return `<span class="unread-message">Unread</span>`;
               } else {
-                return `<input type="checkbox" disabled checked>`;
+                return `<span class="read-message">Read</span>`;
               }
-            }}
+            },
+            className: "text-center"}
           ],
           bDestroy: true,
           pagingType: 'full_numbers'
         });
 
-        $('#example tbody').on( 'click', 'button', function () {
-          table.row( $(this).parents('tr') ).data();
+        $('#checkboxAll').attr('disabled', false);
+
+        $('#checkboxAll').change(function() {
+          if (this.checked) {
+            $('#messageTable tbody span.unread-message').each(function( index ) {
+              $(this).parents('tr').find('input[type="checkbox"].mark-as-read').prop('checked', true);
+            });
+          }
+          else {
+            $('#messageTable tbody span.unread-message').each(function( index ) {
+              $(this).parents('tr').find('input[type="checkbox"].mark-as-read').prop('checked', false);
+            });
+          }
         });
+
+        $('selectAllMessage').removeClass( "sorting_asc sorting" );
+
+        $('#messageTable').on('click', 'tbody tr', function(event) {
+          let data = table.row(this).data();
+          self.selectedMessage = Object.assign({}, data);
+
+          this.waiting = true;
+          axios.post('/recipient/mark-as-read', [data]).then((response) => {
+            this.waiting = false;
+            $("#senderDialog").modal("show");
+          });
+          setTimeout(() => {
+            this.waiting = false;
+          }, 30000);
+        })
 
         $('#messageTable').on('click', 'input[type="checkbox"].mark-as-read', function(event) {
           let data = table.row( $(this).parents('tr') ).data();

@@ -42,12 +42,12 @@ const searchMessageTransaction = async (ctx) => {
 
 const markAsRead = async (ctx) => {
   let user = ctx.state.user;
-  let sender = user['USER_ID'];
+  let recipient = user['USER_ID'];
   let messages = ctx.request.body;
 
   for (let i = 0; i < messages.length; i++) {
     let message = messages[i];
-    await axios.post(`${CONSTANT.API_SERVER}/msgbox/${sender}/recv/${message['TX_ID']}`, {authInfo : ''})
+    await axios.post(`${CONSTANT.API_SERVER}/msgbox/${recipient}/recv/${message['TX_ID']}`, {authInfo : ''})
       .then((response) => {
         ctx.body = response.data;
       })
