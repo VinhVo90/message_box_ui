@@ -222,7 +222,7 @@ window.app = new Vue({
       return result;
     },
 
-    initTimeEvent(dateSelect) {
+    initTimeEvent(dateSelect, type) {
       let self = this;
       $(dateSelect).on('apply.daterangepicker', function(ev, picker) {
         $(this).val(picker.startDate.format(self.momentDateFormat) + ' - ' + picker.endDate.format(self.momentDateFormat));
