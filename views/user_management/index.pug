@@ -52,14 +52,20 @@ block content
                     th.text-center User Type
                     th.text-center Updated
                     th.text-center Action
-                  tr(v-for="(user, key) in userList")
+                  tr.dropdown(v-for="(user, key) in userList")
                     td.text-center(colName="FLAG" style="display:none") {{user.FLAG}}
                     td.text-center(colName="DEL")
                       input(type="checkbox")
                     td.text-center(colName="SYSTEM_ID" style="cursor: pointer" title="View group list") {{user.SYSTEM_ID}}
                     td.text-center.editable-cell(colName="USER_ID" contenteditable="true") {{user.USER_ID}}
                     td.text-center.editable-cell(colName="PASSWORD" contenteditable="true") {{user.PASSWORD}}
-                    td.text-center.editable-cell(colName="USER_TYPE" contenteditable="true") {{user.USER_TYPE}}
+                    td
+                      select.browser-default.custom-select
+                        each option in commonData.userType
+                          option(value='option') #{option}
+                        //- option(value='admin') Admin
+                        //- option(value='operator') Operator
+                        //- option(value='viewer') Viewer
                     td.text-center(colName="UPDATED") {{user.UPDATED}}
                     td.text-center
                       label.history-label(v-if="user.SYSTEM_ID !== ''") history

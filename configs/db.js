@@ -68,12 +68,11 @@
  *
  *****************************************************************************/
 module.exports = {
-  user          : process.env.NODE_ORACLEDB_USER || "MBDEV",
-  password      : process.env.NODE_ORACLEDB_PASSWORD || "MBDEV",
-  connectString : process.env.NODE_ORACLEDB_CONNECTIONSTRING || "172.20.130.31/ALGTV3DEV",
-  database      : process.env.NODE_ORACLEDB_DATABASE || "ALGTV3DEV",
-  host          : process.env.NODE_ORACLEDB_HOST || "172.20.130.31",
-  port          : process.env.NODE_ORACLEDB_PORT || 1522,
+  user          : process.env.NODE_ORACLEDB_USER || "C##ALGETA",
+  password      : process.env.NODE_ORACLEDB_PASSWORD || "C##ALGETA",
+  connectString : process.env.NODE_ORACLEDB_CONNECTIONSTRING || "10.0.0.14/orcl",
+  database      : process.env.NODE_ORACLEDB_DATABASE || "orcl",
+  host          : process.env.NODE_ORACLEDB_HOST || "10.0.0.14",
   externalAuth  : process.env.NODE_ORACLEDB_EXTERNALAUTH ? true : false,
   SESSION_SECRET: 'LUpw33sH3vLHX9MReGRS7YxRJeUY2e'
 };
