@@ -27,7 +27,34 @@ window.app = new Vue({
     }
   },
   mounted() {
+    let self = this;
+    $('#sendTimeDate').daterangepicker({
+      timePicker: true,
+      format: 'YYYY-MM-DD HH:mm',
+      locale: {
+        format: self.momentDateFormat
+      }
+    }, (start, end) => {
+      let startDate = self.getTimeRange(start);
+      let endDate = self.getTimeRange(end);
+      self.searchData.sendTime = 'SendTime';
+      self.searchData.sendTimeFrom = startDate.start;
+      self.searchData.sendTimeTo = endDate.end;
+    });
 
+    $('#recvTimeDate').daterangepicker({
+      timePicker: true,
+      format: 'YYYY-MM-DD HH:mm',
+      locale: {
+        format: self.momentDateFormat
+      }
+    }, (start, end) => {
+      let startDate = self.getTimeRange(start);
+      let endDate = self.getTimeRange(end);
+      self.searchData.recvTime = 'RecvTime';
+      self.searchData.recvTimeFrom = startDate.start;
+      self.searchData.recvTimeTo = endDate.end;
+    });
   },
   methods: {
 
@@ -35,39 +62,12 @@ window.app = new Vue({
       this.waiting = true;
       let self = this;
 
-      if (this.searchData.sendTime != null) {
-        let sendDate = moment(moment(this.searchData.sendTime).format(this.momentDateFormat), this.momentDateFormat);
-        this.searchData.sendTimeFrom = sendDate.valueOf();
-        this.searchData.sendTimeTo = sendDate.clone().add(1, 'days').valueOf() - 1;
-      }
-
-      if (this.searchData.recvTime != null) {
-        let recvDate = moment(moment(this.searchData.recvDate).format(this.momentDateFormat), this.momentDateFormat);
-        this.searchData.sendTimeFrom = recvDate.valueOf();
-        this.searchData.sendTimeTo = recvDate.clone().add(1, 'days').valueOf() - 1;
-      }
-
       axios.post('/recipient/search-message-transaction', this.searchData).then((response) => {
         this.waiting = false;
-        let data = response.data.map((item, index, array) => {
-          if (item['SEND_TIME'] != '' && item['SEND_TIME'] != null) {
-            item['SEND_TIME_FORMAT'] = moment(item['SEND_TIME']).format(this.momentDateFormat);
-          }
-          else {
-            item['SEND_TIME_FORMAT'] = '';
-          }
-          
-          if (item['RECV_TIME'] != '' && item['RECV_TIME'] != null) {
-            item['RECV_TIME_FORMAT'] = moment(item['RECV_TIME']).format(this.momentDateFormat);
-          }
-          else {
-            item['RECV_TIME_FORMAT'] = '';
-          }
-          return item;
-        });
+        let data = this.formatArrayMessage(response.data)
 
         let table = $('#messageTable').DataTable({
-          data: response.data,
+          data: data,
           columns: [
             {
               "data": null,
@@ -112,15 +112,21 @@ window.app = new Vue({
         $('#messageTable').on('click', 'tbody tr', function(event) {
           let data = table.row(this).data();
           if (typeof data != 'undefined') {
-            self.selectedMessage = Object.assign({}, data);
-            this.waiting = true;
-            axios.post('/recipient/mark-as-read', [data]).then((response) => {
-              this.waiting = false;
+            if (data['RECV_TIME'] == '' || data['RECV_TIME'] == null) {
+              self.selectedMessage = Object.assign({}, data);
+              this.waiting = true;
+              axios.post('/recipient/read-message', [data]).then((response) => {
+                this.waiting = false;
+                self.redrawTable(response.data);
+                $("#senderDialog").modal("show");
+              });
+              setTimeout(() => {
+                this.waiting = false;
+              }, 30000);
+            } else {
+              self.selectedMessage = Object.assign({}, data);
               $("#senderDialog").modal("show");
-            });
-            setTimeout(() => {
-              this.waiting = false;
-            }, 30000);
+            }
           }
         })
 
@@ -129,7 +135,7 @@ window.app = new Vue({
           event.stopPropagation();
         });
 
-        this.messageData = response.data;
+        this.messageData = data;
       });
       setTimeout(() => {
         this.waiting = false;
@@ -146,6 +152,7 @@ window.app = new Vue({
 
       axios.post('/recipient/mark-as-read', data).then((response) => {
         this.waiting = false;
+        this.onBtnFindClick();
         toastr.success('Done');
       });
       setTimeout(() => {
@@ -156,6 +163,55 @@ window.app = new Vue({
     onRowClick(message) {
       this.selectedMessage = Object.assign({}, message);
       $("#senderDialog").modal("show");
+    },
+
+    redrawTable(readData) {
+      let self = this;
+      let messageTable = $('#messageTable').DataTable();
+      messageTable.rows().every( function ( rowIdx, tableLoop, rowLoop ) {
+        var data = this.data();
+        for (let i = 0; i < readData.length; i++) {
+          let message = readData[i];
+          if (data['TX_ID'] == message['txId']) {
+            data['RECV_TIME'] = message['recvDate'];
+            data['RECV_TIME_FORMAT'] = self.formatDateMessage(message['recvDate']);
+            break;
+          }
+        }
+        messageTable.row(rowIdx).data(data).draw();
+      } );
+    },
+
+    formatArrayMessage(data) {
+      return data.map((item, index, array) => {
+        if (item['SEND_TIME'] != '' && item['SEND_TIME'] != null) {
+          item['SEND_TIME_FORMAT'] = this.formatDateMessage(item['SEND_TIME']);
+        }
+        else {
+          item['SEND_TIME_FORMAT'] = '';
+        }
+        
+        if (item['RECV_TIME'] != '' && item['RECV_TIME'] != null) {
+          item['RECV_TIME_FORMAT'] = this.formatDateMessage(item['RECV_TIME']);
+        }
+        else {
+          item['RECV_TIME_FORMAT'] = '';
+        }
+        return item;
+      });
+    },
+
+    formatDateMessage(date) {
+      return moment(date).format(this.momentDateFormat);
+    },
+
+    getTimeRange(dateParam) {
+      let dateObject = moment(dateParam.format(this.momentDateFormat), this.momentDateFormat);
+      let result = {
+        start : dateObject.valueOf(),
+        end : dateObject.clone().add(1, 'days').valueOf() - 1
+      }
+      return result;
     }
   }
 });

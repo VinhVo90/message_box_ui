@@ -31,7 +31,9 @@ const searchMessageTransaction = async (ctx) => {
   if (searchData.messageName != '') {
     query += ` AND m.NAME = :messageName`;
   }
- 
+
+  query += ` ORDER BY t.SEND_TIME DESC`;
+
   await models.sequelize.query(query, {
     replacements: searchData,
     type: Sequelize.QueryTypes.SELECT

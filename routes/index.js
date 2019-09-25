@@ -42,6 +42,10 @@ router.post('/recipient/mark-as-read', async ctx => {
   await RecipientController.markAsRead(ctx);
 })
 
+router.post('/recipient/read-message', async ctx => {
+  await RecipientController.readMessage(ctx);
+})
+
 router.get('/403', async ctx => {
   await ctx.render('forbidden');
 })

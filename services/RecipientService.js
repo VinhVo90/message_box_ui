@@ -32,6 +32,8 @@ const searchMessageTransaction = async (ctx) => {
     query += ` AND m.NAME = :messageName`;
   }
  
+  query += ` ORDER BY t.SEND_TIME DESC`;
+  
   await models.sequelize.query(query, {
     replacements: searchData,
     type: Sequelize.QueryTypes.SELECT
@@ -40,14 +42,17 @@ const searchMessageTransaction = async (ctx) => {
   })
 }
 
+
+
 const markAsRead = async (ctx) => {
   let user = ctx.state.user;
   let recipient = user['USER_ID'];
   let messages = ctx.request.body;
+  let result = [];
 
   for (let i = 0; i < messages.length; i++) {
     let message = messages[i];
-    await axios.post(`${CONSTANT.API_SERVER}/msgbox/${recipient}/recv/${message['TX_ID']}`, {authInfo : ''})
+    await axios.delete(`${CONSTANT.API_SERVER}/msgbox/${recipient}/recv/${message['TX_ID']}`, {authInfo : ''})
       .then((response) => {
         ctx.body = response.data;
       })
@@ -58,9 +63,27 @@ const markAsRead = async (ctx) => {
         };
       });
   }
+  ctx.body = result;
+}
+
+const readMessage = async (ctx) => {
+  let user = ctx.state.user;
+  let recipient = user['USER_ID'];
+  let messages = ctx.request.body;
+  let result = [];
+
+  for (let i = 0; i < messages.length; i++) {
+    let message = messages[i];
+    await axios.get(`${CONSTANT.API_SERVER}/msgbox/${recipient}/recv/${message['TX_ID']}`, {authInfo : ''})
+      .catch((error) => {console.log(error)});
+    let recvDate = (new Date()).getTime();
+    result.push({txId : message['TX_ID'], recvDate : recvDate});
+  }
+  ctx.body = result;
 }
 
 module.exports = {
   searchMessageTransaction,
-  markAsRead
+  markAsRead,
+  readMessage
 }
