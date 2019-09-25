@@ -30,6 +30,7 @@ window.app = new Vue({
     let self = this;
     $('#sendTimeDate').daterangepicker({
       timePicker: true,
+      autoUpdateInput: false,
       format: 'YYYY-MM-DD HH:mm',
       locale: {
         format: self.momentDateFormat
@@ -40,10 +41,14 @@ window.app = new Vue({
       self.searchData.sendTime = 'SendTime';
       self.searchData.sendTimeFrom = startDate.start;
       self.searchData.sendTimeTo = endDate.end;
+      $('#sendTimeDate').val(start.format(self.momentDateFormat) + ' - ' + end.format(self.momentDateFormat));
     });
+
+    this.initTimeEvent('#sendTimeDate');
 
     $('#recvTimeDate').daterangepicker({
       timePicker: true,
+      autoUpdateInput: false,
       format: 'YYYY-MM-DD HH:mm',
       locale: {
         format: self.momentDateFormat
@@ -54,7 +59,10 @@ window.app = new Vue({
       self.searchData.recvTime = 'RecvTime';
       self.searchData.recvTimeFrom = startDate.start;
       self.searchData.recvTimeTo = endDate.end;
+      $('#recvTimeDate').val(start.format(self.momentDateFormat) + ' - ' + end.format(self.momentDateFormat));
     });
+
+    this.initTimeEvent('#recvTimeDate');
   },
   methods: {
 
@@ -167,6 +175,17 @@ window.app = new Vue({
         end : dateObject.clone().add(1, 'days').valueOf() - 1
       }
       return result;
+    },
+
+    initTimeEvent(dateSelect) {
+      let self = this;
+      $(dateSelect).on('apply.daterangepicker', function(ev, picker) {
+        $(this).val(picker.startDate.format(self.momentDateFormat) + ' - ' + picker.endDate.format(self.momentDateFormat));
+      });
+
+      $(dateSelect).on('cancel.daterangepicker', function(ev, picker) {
+          $(this).val('');
+      });
     }
   }
 });

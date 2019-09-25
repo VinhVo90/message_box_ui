@@ -1,8 +1,16 @@
-nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
+nav#navbar-messagebox.navbar.navbar-expand-lg.navbar-dark.bg-dark
   button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarNav' aria-controls='navbarNav' aria-expanded='false' aria-label='Toggle navigation')
     span.navbar-toggler-icon
   #navbarNav.collapse.navbar-collapse
-    ul.navbar-nav
+    ul.navbar-nav.mr-auto
       each val in user.permission
         li.nav-item
           a.nav-link(class=activePage==val.name ? "active" : "", href=val.url) #{val.text}
+  
+  ul.navbar-nav.mr-auto
+    li.nav-item
+      a.nav-link(data-toggle='collapse' data-target='#usrinfo')
+        i.fa.fa-user
+        |  #{user['USER_ID']}
+    li.nav-item
+      a.nav-link(href="#" @click="logout") Sign out

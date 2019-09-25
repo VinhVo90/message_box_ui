@@ -9,6 +9,9 @@ const RecipientController = require('../controllers/RecipientController');
 router.get('/', HomeController.getIndex);
 
 router.get('/login', loginController.getIndex);
+router.post('/logout', async ctx => {
+  await loginController.logout(ctx);
+})
 router.post('/api/getUserinfo', loginController.getUserInfo);
 
 router.get('/user_management', userManagementController.getIndex);
