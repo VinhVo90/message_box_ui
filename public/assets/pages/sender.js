@@ -10,7 +10,7 @@ window.app = new Vue({
       waiting: false,
       configs: [],
       datePickerFormat: 'dd/MM/yyyy',
-      momentDateFormat: 'DD/MM/YYYY',
+      momentDateFormat: 'DD/MM/YYYY HH:mm:ss',
       searchData: {
         sendTime: null,
         sendTimeFrom: null,
@@ -30,39 +30,39 @@ window.app = new Vue({
     let self = this;
     $('#sendTimeDate').daterangepicker({
       timePicker: true,
+      timePickerSeconds: true,
+      timePicker24Hour: true,
       autoUpdateInput: false,
-      format: 'YYYY-MM-DD HH:mm',
+      format: self.momentDateFormat,
       locale: {
         format: self.momentDateFormat
       }
     }, (start, end) => {
-      let startDate = self.getTimeRange(start);
-      let endDate = self.getTimeRange(end);
       self.searchData.sendTime = 'SendTime';
-      self.searchData.sendTimeFrom = startDate.start;
-      self.searchData.sendTimeTo = endDate.end;
+      self.searchData.sendTimeFrom = start.valueOf();
+      self.searchData.sendTimeTo = end.valueOf();
       $('#sendTimeDate').val(start.format(self.momentDateFormat) + ' - ' + end.format(self.momentDateFormat));
     });
 
-    this.initTimeEvent('#sendTimeDate');
+    this.initTimeEvent('#sendTimeDate', 'Send');
 
     $('#recvTimeDate').daterangepicker({
       timePicker: true,
+      timePickerSeconds: true,
+      timePicker24Hour: true,
       autoUpdateInput: false,
-      format: 'YYYY-MM-DD HH:mm',
+      format: self.momentDateFormat,
       locale: {
         format: self.momentDateFormat
       }
     }, (start, end) => {
-      let startDate = self.getTimeRange(start);
-      let endDate = self.getTimeRange(end);
       self.searchData.recvTime = 'RecvTime';
-      self.searchData.recvTimeFrom = startDate.start;
-      self.searchData.recvTimeTo = endDate.end;
+      self.searchData.recvTimeFrom = start.valueOf();
+      self.searchData.recvTimeTo = end.valueOf();
       $('#recvTimeDate').val(start.format(self.momentDateFormat) + ' - ' + end.format(self.momentDateFormat));
     });
 
-    this.initTimeEvent('#recvTimeDate');
+    this.initTimeEvent('#recvTimeDate', 'Recv');
   },
   methods: {
 
@@ -177,14 +177,23 @@ window.app = new Vue({
       return result;
     },
 
-    initTimeEvent(dateSelect) {
+    initTimeEvent(dateSelect, type) {
       let self = this;
       $(dateSelect).on('apply.daterangepicker', function(ev, picker) {
         $(this).val(picker.startDate.format(self.momentDateFormat) + ' - ' + picker.endDate.format(self.momentDateFormat));
       });
 
       $(dateSelect).on('cancel.daterangepicker', function(ev, picker) {
-          $(this).val('');
+        $(this).val('');
+        if (type == 'Send') {
+          self.searchData['sendTime'] = null;
+          self.searchData['sendTimeFrom'] = null;
+          self.searchData['sendTimeTo'] = null;
+        } else {
+          self.searchData['recvTime'] = null;
+          self.searchData['recvTimeFrom'] = null;
+          self.searchData['recvTimeTo'] = null;
+        }
       });
     }
   }
