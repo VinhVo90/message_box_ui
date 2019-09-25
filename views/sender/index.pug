@@ -14,37 +14,37 @@ block content
       .col-10.border.rounded.pt-2.mb-2
         .row
           .col-12.text-right
-              button.btn.btn-primary.mr-2(type='button' data-toggle='button' aria-pressed='false' autocomplete='off', @click="onSendNewMessage") Send New Message
-              button.btn.btn-primary(type='button' data-toggle='button' aria-pressed='false' autocomplete='off', @click="onBtnFindClick") Find
+            .btn-group
+              button.btn.btn-primary(type='button' data-toggle='button' aria-pressed='false' autocomplete='off', @click="onBtnSearchClick") Search
+              button.btn.btn-primary(type='button' data-toggle='button' aria-pressed='false' autocomplete='off', @click="onSendNewMessage") Send New Message
         .row
           .col-12
             form
               .form-row
-                .form-group.col-md-6
+                .form-group.col-md-4
                   label(for='recipientText') Recipient
                   input#recipientText.form-control(type='text' placeholder='Recipient', v-model='searchData.recipient')
-                .form-group.col-md-6
+                .form-group.col-md-4
                   label(for='groupText') Group
                   input#groupText.form-control(type='text' placeholder='Group', v-model='searchData.group')
+                .form-group.col-md-4
+                  label(for='messageNameText') Message Name
+                  input#messageNameText.form-control(type='text' placeholder='Message Name', v-model='searchData.messageName')
               .form-row
-                .form-group.col-md-6
+                .form-group.col-md-4
                   label Send Time
                   .input-group
                     .input-group-prepend
                       span.input-group-text
                         i.fa.fa-calendar
                     input#sendTimeDate.form-control.float-right(type='text', maxLength='35')
-                .form-group.col-md-6
+                .form-group.col-md-4
                   label Recv Time
                   .input-group
                     .input-group-prepend
                       span.input-group-text
                         i.fa.fa-calendar
                     input#recvTimeDate.form-control.float-right(type='text', maxLength='35')
-              .form-row
-                .form-group.col-md-6
-                  label(for='messageNameText') Message Name
-                  input#messageNameText.form-control(type='text' placeholder='Message Name', v-model='searchData.messageName')
       .col-10.border.rounded.pt-2.mb-2
         table#messageTable.table.table-bordered.table-hover
           thead

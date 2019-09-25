@@ -260,14 +260,6 @@ window.app = new Vue({
             // change has happened, store new value
             $($(this).closest('tr').find('td')[0]).text(CRUD_FLAG.UPDATE);
           }
-
-          // const system_id = $($(this).closest('tr').find('td')[1]).text();
-          // const user = self.userList.find(function(el) {
-          //   return el.SYSTEM_ID === system_id;
-          // });
-
-          // user[$(this).attr('colName')] = this.innerHTML;
-          // user['FLAG'] = $(this).closest('tr').find('td')[0].innerHTML;
         };
       }
     }

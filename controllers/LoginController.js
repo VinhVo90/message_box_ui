@@ -11,7 +11,13 @@ const getUserInfo = async (ctx) => {
   await LoginService.getUserInfo(ctx);
 }
 
+const logout = async (ctx) => {
+  ctx.session = null;
+  ctx.body = {success : true};
+}
+
 module.exports = {
   getIndex,
-  getUserInfo
+  getUserInfo,
+  logout
 };
