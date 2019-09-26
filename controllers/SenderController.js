@@ -1,6 +1,4 @@
 const SenderService = require('../services/SenderService');
-const fs = require('fs');
-const path = require('path');
 
 const getIndex = async (ctx) => {
   await ctx.render('sender/index');

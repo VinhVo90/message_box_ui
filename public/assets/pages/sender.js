@@ -10,7 +10,7 @@ window.app = new Vue({
       waiting: false,
       configs: [],
       datePickerFormat: 'dd/MM/yyyy',
-      momentDateFormat: 'DD/MM/YYYY',
+      momentDateFormat: 'DD/MM/YYYY HH:mm:ss',
       searchData: {
         sendTime: null,
         sendTimeFrom: null,
@@ -27,54 +27,54 @@ window.app = new Vue({
     }
   },
   mounted() {
-    let self = this;
+    const self = this;
     $('#sendTimeDate').daterangepicker({
       timePicker: true,
+      timePickerSeconds: true,
+      timePicker24Hour: true,
       autoUpdateInput: false,
-      format: 'YYYY-MM-DD HH:mm',
+      format: self.momentDateFormat,
       locale: {
         format: self.momentDateFormat
       }
     }, (start, end) => {
-      let startDate = self.getTimeRange(start);
-      let endDate = self.getTimeRange(end);
       self.searchData.sendTime = 'SendTime';
-      self.searchData.sendTimeFrom = startDate.start;
-      self.searchData.sendTimeTo = endDate.end;
+      self.searchData.sendTimeFrom = start.valueOf();
+      self.searchData.sendTimeTo = end.valueOf();
       $('#sendTimeDate').val(start.format(self.momentDateFormat) + ' - ' + end.format(self.momentDateFormat));
     });
 
-    this.initTimeEvent('#sendTimeDate');
+    this.initTimeEvent('#sendTimeDate', 'Send');
 
     $('#recvTimeDate').daterangepicker({
       timePicker: true,
+      timePickerSeconds: true,
+      timePicker24Hour: true,
       autoUpdateInput: false,
-      format: 'YYYY-MM-DD HH:mm',
+      format: self.momentDateFormat,
       locale: {
         format: self.momentDateFormat
       }
     }, (start, end) => {
-      let startDate = self.getTimeRange(start);
-      let endDate = self.getTimeRange(end);
       self.searchData.recvTime = 'RecvTime';
-      self.searchData.recvTimeFrom = startDate.start;
-      self.searchData.recvTimeTo = endDate.end;
+      self.searchData.recvTimeFrom = start.valueOf();
+      self.searchData.recvTimeTo = end.valueOf();
       $('#recvTimeDate').val(start.format(self.momentDateFormat) + ' - ' + end.format(self.momentDateFormat));
     });
 
-    this.initTimeEvent('#recvTimeDate');
+    this.initTimeEvent('#recvTimeDate', 'Recv');
   },
   methods: {
 
     onBtnSearchClick() {
       this.waiting = true;
-      let self = this;
+      const self = this;
 
       axios.post('/sender/search-message-transaction', this.searchData).then((response) => {
         this.waiting = false;
-        let data = this.formatArrayMessage(response.data);
+        const data = this.formatArrayMessage(response.data);
 
-        let table = $('#messageTable').DataTable({
+        const table = $('#messageTable').DataTable({
           data: data,
           columns: [
             {data : 'RECIPIENT_ID'},
@@ -88,7 +88,7 @@ window.app = new Vue({
         });
 
         $('#messageTable').on('click', 'tbody tr', function(event) {
-          let data = table.row(this).data();
+          const data = table.row(this).data();
           self.selectedMessage = Object.assign({}, data);
           $("#recipientDialog").modal("show");
         })
@@ -128,11 +128,10 @@ window.app = new Vue({
 
       axios.post('/sender/send-message', postData).then((response) => {
         this.waiting = false;
-        let data = response.data;
+        const data = response.data;
         if (data.error) {
           toastr.error(data.data)
-        }
-        else {
+        } else {
           $("#recipientDialog").modal("hide");
           toastr.success('Send success');
         }
@@ -149,15 +148,13 @@ window.app = new Vue({
       return data.map((item, index, array) => {
         if (item['SEND_TIME'] != '' && item['SEND_TIME'] != null) {
           item['SEND_TIME_FORMAT'] = this.formatDateMessage(item['SEND_TIME']);
-        }
-        else {
+        } else {
           item['SEND_TIME_FORMAT'] = '';
         }
         
         if (item['RECV_TIME'] != '' && item['RECV_TIME'] != null) {
           item['RECV_TIME_FORMAT'] = this.formatDateMessage(item['RECV_TIME']);
-        }
-        else {
+        } else {
           item['RECV_TIME_FORMAT'] = '';
         }
         return item;
@@ -169,22 +166,31 @@ window.app = new Vue({
     },
 
     getTimeRange(dateParam) {
-      let dateObject = moment(dateParam.format(this.momentDateFormat), this.momentDateFormat);
-      let result = {
+      const dateObject = moment(dateParam.format(this.momentDateFormat), this.momentDateFormat);
+      const result = {
         start : dateObject.valueOf(),
         end : dateObject.clone().add(1, 'days').valueOf() - 1
       }
       return result;
     },
 
-    initTimeEvent(dateSelect) {
-      let self = this;
+    initTimeEvent(dateSelect, type) {
+      const self = this;
       $(dateSelect).on('apply.daterangepicker', function(ev, picker) {
         $(this).val(picker.startDate.format(self.momentDateFormat) + ' - ' + picker.endDate.format(self.momentDateFormat));
       });
 
       $(dateSelect).on('cancel.daterangepicker', function(ev, picker) {
-          $(this).val('');
+        $(this).val('');
+        if (type == 'Send') {
+          self.searchData['sendTime'] = null;
+          self.searchData['sendTimeFrom'] = null;
+          self.searchData['sendTimeTo'] = null;
+        } else {
+          self.searchData['recvTime'] = null;
+          self.searchData['recvTimeFrom'] = null;
+          self.searchData['recvTimeTo'] = null;
+        }
       });
     }
   }

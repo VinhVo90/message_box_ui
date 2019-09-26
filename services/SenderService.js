@@ -7,7 +7,7 @@ oracledb.fetchAsString = [oracledb.CLOB];
 
 /**search message by send_time, recv_time, message name, group, recipient */
 const searchMessageTransaction = async (ctx) => {
-  let user = ctx.state.user;
+  const user = ctx.state.user;
   let searchData = ctx.request.body;
   searchData['sender'] = user['USER_ID'];
 
@@ -43,12 +43,12 @@ const searchMessageTransaction = async (ctx) => {
 }
 
 const sendMessage = async (ctx) => {
-  let user = ctx.state.user;
-  let formData = ctx.request.body;
-  let sender = user['USER_ID'];
-  let recipient = formData['recipient'];
-  let group = formData['group'];
-  let messageData = {name : formData['fileName'], content : formData['fileContent'], authInfo : ''};
+  const user = ctx.state.user;
+  const formData = ctx.request.body;
+  const sender = user['USER_ID'];
+  const recipient = formData['recipient'];
+  const group = formData['group'];
+  const messageData = {name : formData['fileName'], content : formData['fileContent'], authInfo : ''};
 
   await axios.post(`${CONSTANT.API_SERVER}/msgbox/${sender}/send/${recipient}/${group}`, messageData)
       .then((response) => {

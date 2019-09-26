@@ -8,7 +8,7 @@ oracledb.fetchAsString = [oracledb.CLOB];
 /**search message by send_time, recv_time, message name, group, recipient */
 const searchMessageTransaction = async (ctx) => {
   let searchData = ctx.request.body;
-  let user = ctx.state.user;
+  const user = ctx.state.user;
   searchData['recipient'] = user['USER_ID'];
 
   let query = `SELECT t.TX_ID, t.SENDER_ID, t.RECIPIENT_ID, t.GROUP_ID, t.MSG_ID, t.SEND_TIME, t.RECV_TIME, m.NAME, m.CONTENT
@@ -42,15 +42,13 @@ const searchMessageTransaction = async (ctx) => {
   })
 }
 
-
-
 const markAsRead = async (ctx) => {
-  let user = ctx.state.user;
-  let recipient = user['USER_ID'];
-  let messages = ctx.request.body;
+  const user = ctx.state.user;
+  const recipient = user['USER_ID'];
+  const messages = ctx.request.body;
   let result = [];
 
-  for (let i = 0; i < messages.length; i++) {
+  for (let i = 0; i < messages.length; i += 1) {
     let message = messages[i];
     await axios.delete(`${CONSTANT.API_SERVER}/msgbox/${recipient}/recv/${message['TX_ID']}`, {authInfo : ''})
       .then((response) => {
@@ -67,12 +65,12 @@ const markAsRead = async (ctx) => {
 }
 
 const readMessage = async (ctx) => {
-  let user = ctx.state.user;
-  let recipient = user['USER_ID'];
-  let messages = ctx.request.body;
+  const user = ctx.state.user;
+  const recipient = user['USER_ID'];
+  const messages = ctx.request.body;
   let result = [];
 
-  for (let i = 0; i < messages.length; i++) {
+  for (let i = 0; i < messages.length; i += 1) {
     let message = messages[i];
     await axios.get(`${CONSTANT.API_SERVER}/msgbox/${recipient}/recv/${message['TX_ID']}`, {authInfo : ''})
       .catch((error) => {console.log(error)});

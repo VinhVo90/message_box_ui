@@ -37,23 +37,24 @@ block content
                     .input-group-prepend
                       span.input-group-text
                         i.fa.fa-calendar
-                    input#sendTimeDate.form-control.float-right(type='text', maxLength='35')
+                    input#sendTimeDate.form-control.float-right(type='text', maxLength='46', readonly, style="background : white")
                 .form-group.col-md-4
                   label Recv Time
                   .input-group
                     .input-group-prepend
                       span.input-group-text
                         i.fa.fa-calendar
-                    input#recvTimeDate.form-control.float-right(type='text', maxLength='35')
+                    input#recvTimeDate.form-control.float-right(type='text', maxLength='46', readonly, style="background : white")
       .col-10.border.rounded.pt-2.mb-2
-        table#messageTable.table.table-bordered.table-hover
-          thead
-            tr
-              th(scope='col') Recipient
-              th(scope='col') Group
-              th(scope='col') Send Time
-              th(scope='col') Recv Time
-              th(scope='col') Message Name
+        .table-responsive
+          table#messageTable.table.table-bordered.table-hover(style="width : 100%")
+            thead
+              tr
+                th(scope='col') Recipient
+                th(scope='col') Group
+                th(scope='col') Send Time
+                th(scope='col') Recv Time
+                th(scope='col') Message Name
     #recipientDialog.modal.fade(role='dialog')
       .modal-dialog.recipientModal
         // Modal content
