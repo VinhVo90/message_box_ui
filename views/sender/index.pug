@@ -46,14 +46,15 @@ block content
                         i.fa.fa-calendar
                     input#recvTimeDate.form-control.float-right(type='text', maxLength='46', readonly, style="background : white")
       .col-10.border.rounded.pt-2.mb-2
-        table#messageTable.table.table-bordered.table-hover
-          thead
-            tr
-              th(scope='col') Recipient
-              th(scope='col') Group
-              th(scope='col') Send Time
-              th(scope='col') Recv Time
-              th(scope='col') Message Name
+        .table-responsive
+          table#messageTable.table.table-bordered.table-hover
+            thead
+              tr
+                th(scope='col') Recipient
+                th(scope='col') Group
+                th(scope='col') Send Time
+                th(scope='col') Recv Time
+                th(scope='col') Message Name
     #recipientDialog.modal.fade(role='dialog')
       .modal-dialog.recipientModal
         // Modal content
