@@ -18,12 +18,14 @@ window.app = new Vue({
   methods: {
     onLogin() {
       if (this.username === "") {
-        warningMsg('Please input username');
+        toastr.info('Enter username please!');
+        $('#username').focus();
         return;
       }
 
       if (this.password === "") {
-        warningMsg('Please input password');
+        toastr.info('Enter password please!');
+        $('#password').focus();
         return;
       }
 
@@ -37,17 +39,15 @@ window.app = new Vue({
         this.waiting = false;
         if (response.data.authenticated) {
           window.location.replace("/");
+        } else {
+          setTimeout(function() {
+            console.log(response.data);
+            if (response.data.length === 0) {
+              toastr.error('Incorrect usename/password');
+              $('#username').select();
+            }
+          },100);
         }
-        setTimeout(function() {
-          console.log(response.data);
-          if (response.data.length === 0) {
-            warningMsg('Incorrect usename/password');
-            return;
-          }
-
-          // window.open("/user_management","_self");
-        },100);
-        
       }).catch(ex => {
         this.waiting = false;
         console.log(ex);

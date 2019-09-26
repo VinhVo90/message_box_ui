@@ -28,7 +28,9 @@ window.app = new Vue({
       }
     });
 
-    $('#table_user_list').DataTable();
+    $('#table_user_list').DataTable({
+      paging: false
+    });
   },
 
   updated() {
@@ -147,7 +149,7 @@ window.app = new Vue({
           }     
         ],
         bDestroy: true,
-        pagingType: 'full_numbers'
+        paging: false
       });
     },
 
@@ -176,16 +178,24 @@ window.app = new Vue({
         const res = $('#table_user_list').DataTable().row.add({FLAG: CRUD_FLAG.CREATE, SYSTEM_ID: '', USER_ID: '', PASSWORD: '', USER_TYPE: '', UPDATED: ''}).draw(false);
       }
 
-      this.initUserTableEvent();
+      $('#table_user_list td[colName="DEL"] input').unbind();
+      $('#table_user_list td[colName="DEL"] input').click(function() {
+        const flag = $(this).parents('tr').find('td[colName="FLAG"]')[0].innerHTML;
+        if (this.checked && flag === CRUD_FLAG.CREATE) {
+          $('#table_user_list').DataTable().row($(this).parents('tr')).remove().draw();
+        }
+      });
     },
 
     onSaveUser() {
       this.waiting = true;
+      if (!this.validateUserTable()) return;
+
       const dataTable = this.getUserDataTable();
 
       if (dataTable.length === 0) {
         this.waiting = false;
-        infoMsg('There is no any change to save.');
+        toastr.info('There is no any change to save.');
         return;
       }
       axios.post('/api/saveUsers', {
@@ -213,12 +223,6 @@ window.app = new Vue({
           const cols = $row.find('td');
           let dataRow = {};
 
-          const flag = $row.find('[colName="FLAG"]')[0].innerHTML;
-          const delCheck = $($row.find('[colName="DEL"] input')[0]).is(':checked');
-
-          if (flag === CRUD_FLAG.RETRIEVE) continue;
-          if (flag === CRUD_FLAG.CREATE && delCheck) continue;
-
           for (let j = 0; j < cols.length; j += 1) {
             const $col = $(cols[j]);
             if ($col.attr('colName') === 'DEL') {
@@ -230,8 +234,9 @@ window.app = new Vue({
               dataRow[$col.attr('colName')] = $col.text();
             }
           }
-
-          dataTable.push(dataRow);
+          if (dataRow['FLAG'] !== CRUD_FLAG.RETRIEVE) {
+            dataTable.push(dataRow);
+          }
         }
       }
 
@@ -333,6 +338,8 @@ window.app = new Vue({
       $('#table_user_list td[colName="SYSTEM_ID"]').unbind();
       $('#table_user_list td[colName="SYSTEM_ID"]').click(function() {
         const systemId = this.innerHTML;
+        if (systemId === '') return;
+
         self.onLoadGroupList(systemId);
       });
 
@@ -386,18 +393,33 @@ window.app = new Vue({
           for (let j = 0; j < cols.length; j += 1) {
             const $col = $(cols[j]);
             if ($col.attr('colName') === 'USER_ID') {
-              const value = $col.val();
+              const value = $col.text();
+              const reg = /^\w+$/;
               if (value === "") {
-                warningMsg()
+                this.waiting = false;
+                toastr.error("Enter User Id please.");
+                $col.focus();
+                return false;
+              } else if (!reg.test(value)) {
+                this.waiting = false;
+                toastr.error("Username must contain only letters, numbers and underscores!");
+                $col.focus();
+                return false;
               }
             } else if ($col.attr('colName') === 'PASSWORD') {
-
+              const value = $col.text();
+              if (value === "") {
+                this.waiting = false;
+                toastr.error("Enter Password please.");
+                $col.focus();
+                return false;
+              }
             }
           }
-
-          dataTable.push(dataRow);
         }
       }
+
+      return true;
     }
   }
 });
