@@ -27,7 +27,7 @@ window.app = new Vue({
     }
   },
   mounted() {
-    let self = this;
+    const self = this;
     $('#sendTimeDate').daterangepicker({
       timePicker: true,
       timePickerSeconds: true,
@@ -68,13 +68,13 @@ window.app = new Vue({
 
     onBtnSearchClick() {
       this.waiting = true;
-      let self = this;
+      const self = this;
 
       axios.post('/recipient/search-message-transaction', this.searchData).then((response) => {
         this.waiting = false;
-        let data = this.formatArrayMessage(response.data)
+        const data = this.formatArrayMessage(response.data)
 
-        let table = $('#messageTable').DataTable({
+        const table = $('#messageTable').DataTable({
           data: data,
           columns: [
             {
@@ -107,18 +107,17 @@ window.app = new Vue({
             $('#messageTable tbody span.unread-message').each(function( index ) {
               $(this).parents('tr').find('input[type="checkbox"].mark-as-read').prop('checked', true);
             });
-          }
-          else {
+          } else {
             $('#messageTable tbody span.unread-message').each(function( index ) {
               $(this).parents('tr').find('input[type="checkbox"].mark-as-read').prop('checked', false);
             });
           }
         });
 
-        $('selectAllMessage').removeClass( "sorting_asc sorting" );
+        $('#selectAllMessage').removeClass( "sorting_asc sorting" );
 
         $('#messageTable').on('click', 'tbody tr', function(event) {
-          let data = table.row(this).data();
+          const data = table.row(this).data();
           if (typeof data != 'undefined') {
             if (data['RECV_TIME'] == '' || data['RECV_TIME'] == null) {
               self.selectedMessage = Object.assign({}, data);
@@ -139,7 +138,6 @@ window.app = new Vue({
         })
 
         $('#messageTable').on('click', 'input[type="checkbox"].mark-as-read', function(event) {
-          let data = table.row( $(this).parents('tr') ).data();
           event.stopPropagation();
         });
 
@@ -151,9 +149,9 @@ window.app = new Vue({
     },
 
     onMarkAsRead() {
-      let data = [];
+      const data = [];
       $( 'input[type="checkbox"].mark-as-read:checked' ).each(function( index ) {
-        let rowData = $('#messageTable').DataTable().row( $(this).parents('tr') ).data();
+        const rowData = $('#messageTable').DataTable().row( $(this).parents('tr') ).data();
         data.push(rowData);
       });
       this.waiting = true;
@@ -174,12 +172,12 @@ window.app = new Vue({
     },
 
     redrawTable(readData) {
-      let self = this;
-      let messageTable = $('#messageTable').DataTable();
+      const self = this;
+      const messageTable = $('#messageTable').DataTable();
       messageTable.rows().every( function ( rowIdx, tableLoop, rowLoop ) {
-        var data = this.data();
-        for (let i = 0; i < readData.length; i++) {
-          let message = readData[i];
+        let data = this.data();
+        for (let i = 0; i < readData.length; i += 1) {
+          const message = readData[i];
           if (data['TX_ID'] == message['txId']) {
             data['RECV_TIME'] = message['recvDate'];
             data['RECV_TIME_FORMAT'] = self.formatDateMessage(message['recvDate']);
@@ -194,15 +192,13 @@ window.app = new Vue({
       return data.map((item, index, array) => {
         if (item['SEND_TIME'] != '' && item['SEND_TIME'] != null) {
           item['SEND_TIME_FORMAT'] = this.formatDateMessage(item['SEND_TIME']);
-        }
-        else {
+        } else {
           item['SEND_TIME_FORMAT'] = '';
         }
         
         if (item['RECV_TIME'] != '' && item['RECV_TIME'] != null) {
           item['RECV_TIME_FORMAT'] = this.formatDateMessage(item['RECV_TIME']);
-        }
-        else {
+        } else {
           item['RECV_TIME_FORMAT'] = '';
         }
         return item;
@@ -214,8 +210,8 @@ window.app = new Vue({
     },
 
     getTimeRange(dateParam) {
-      let dateObject = moment(dateParam.format(this.momentDateFormat), this.momentDateFormat);
-      let result = {
+      const dateObject = moment(dateParam.format(this.momentDateFormat), this.momentDateFormat);
+      const result = {
         start : dateObject.valueOf(),
         end : dateObject.clone().add(1, 'days').valueOf() - 1
       }
@@ -223,7 +219,7 @@ window.app = new Vue({
     },
 
     initTimeEvent(dateSelect, type) {
-      let self = this;
+      const self = this;
       $(dateSelect).on('apply.daterangepicker', function(ev, picker) {
         $(this).val(picker.startDate.format(self.momentDateFormat) + ' - ' + picker.endDate.format(self.momentDateFormat));
       });

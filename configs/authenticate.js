@@ -1,16 +1,16 @@
-let _ = require('lodash');
+const _ = require('lodash');
 
-let nonAuthorizeUrl = function(url) {
-  let arrNonAuthorizeUrl = ['/api/getUserinfo', '/403', '/404', '/'];
+const nonAuthorizeUrl = function(url) {
+  const arrNonAuthorizeUrl = ['/api/getUserinfo', '/403', '/404', '/'];
   if (url.indexOf("assets") > 0 || arrNonAuthorizeUrl.includes(url)) {
     return true;
   }
   return false;
 }
 
-let authenticate = async function(ctx, next) {
-  let requestPath = ctx.request.path;
-  let user = ctx.session.user;
+const authenticate = async function(ctx, next) {
+  const requestPath = ctx.request.path;
+  const user = ctx.session.user;
 
   if (nonAuthorizeUrl(requestPath)) {
     await next();

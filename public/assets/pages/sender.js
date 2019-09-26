@@ -27,7 +27,7 @@ window.app = new Vue({
     }
   },
   mounted() {
-    let self = this;
+    const self = this;
     $('#sendTimeDate').daterangepicker({
       timePicker: true,
       timePickerSeconds: true,
@@ -68,13 +68,13 @@ window.app = new Vue({
 
     onBtnSearchClick() {
       this.waiting = true;
-      let self = this;
+      const self = this;
 
       axios.post('/sender/search-message-transaction', this.searchData).then((response) => {
         this.waiting = false;
-        let data = this.formatArrayMessage(response.data);
+        const data = this.formatArrayMessage(response.data);
 
-        let table = $('#messageTable').DataTable({
+        const table = $('#messageTable').DataTable({
           data: data,
           columns: [
             {data : 'RECIPIENT_ID'},
@@ -88,7 +88,7 @@ window.app = new Vue({
         });
 
         $('#messageTable').on('click', 'tbody tr', function(event) {
-          let data = table.row(this).data();
+          const data = table.row(this).data();
           self.selectedMessage = Object.assign({}, data);
           $("#recipientDialog").modal("show");
         })
@@ -128,11 +128,10 @@ window.app = new Vue({
 
       axios.post('/sender/send-message', postData).then((response) => {
         this.waiting = false;
-        let data = response.data;
+        const data = response.data;
         if (data.error) {
           toastr.error(data.data)
-        }
-        else {
+        } else {
           $("#recipientDialog").modal("hide");
           toastr.success('Send success');
         }
@@ -149,15 +148,13 @@ window.app = new Vue({
       return data.map((item, index, array) => {
         if (item['SEND_TIME'] != '' && item['SEND_TIME'] != null) {
           item['SEND_TIME_FORMAT'] = this.formatDateMessage(item['SEND_TIME']);
-        }
-        else {
+        } else {
           item['SEND_TIME_FORMAT'] = '';
         }
         
         if (item['RECV_TIME'] != '' && item['RECV_TIME'] != null) {
           item['RECV_TIME_FORMAT'] = this.formatDateMessage(item['RECV_TIME']);
-        }
-        else {
+        } else {
           item['RECV_TIME_FORMAT'] = '';
         }
         return item;
@@ -169,8 +166,8 @@ window.app = new Vue({
     },
 
     getTimeRange(dateParam) {
-      let dateObject = moment(dateParam.format(this.momentDateFormat), this.momentDateFormat);
-      let result = {
+      const dateObject = moment(dateParam.format(this.momentDateFormat), this.momentDateFormat);
+      const result = {
         start : dateObject.valueOf(),
         end : dateObject.clone().add(1, 'days').valueOf() - 1
       }
@@ -178,7 +175,7 @@ window.app = new Vue({
     },
 
     initTimeEvent(dateSelect, type) {
-      let self = this;
+      const self = this;
       $(dateSelect).on('apply.daterangepicker', function(ev, picker) {
         $(this).val(picker.startDate.format(self.momentDateFormat) + ' - ' + picker.endDate.format(self.momentDateFormat));
       });
