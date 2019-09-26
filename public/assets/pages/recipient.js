@@ -99,7 +99,7 @@ window.app = new Vue({
           ],
           bDestroy: true,
           pagingType: 'full_numbers',
-          ordering: false
+          order: []
         });
 
         $('#checkboxAll').attr('disabled', false);
@@ -186,10 +186,10 @@ window.app = new Vue({
           if (data['TX_ID'] == message['TX_ID']) {
             data['RECV_TIME'] = message['RECV_TIME'];
             data['RECV_TIME_FORMAT'] = self.formatDateMessage(message['RECV_TIME']);
+            messageTable.row(rowIdx).data(data).invalidate();
             break;
           }
         }
-        messageTable.row(rowIdx).data(data).draw();
       } );
     },
 

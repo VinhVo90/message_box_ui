@@ -86,7 +86,7 @@ window.app = new Vue({
           ],
           bDestroy: true,
           pagingType: 'full_numbers',
-          ordering: false
+          order: []
         });
 
         $('#messageTable tbody td.msg-name-cell').prop('title', 'Show Message');
