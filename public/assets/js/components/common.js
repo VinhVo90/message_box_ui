@@ -6,6 +6,14 @@ function successMsg(msg) {
   )
 }
 
+function infoMsg(msg) {
+  swal(
+    'Infomation',
+    `${msg}`,
+    'info'
+  )
+}
+
 function errorMsg(msg) {
   swal(
     'Error',

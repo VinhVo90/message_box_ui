@@ -27,6 +27,8 @@ window.app = new Vue({
         $('.modal').modal('hide')
       }
     });
+
+    $('#table_user_list').DataTable();
   },
 
   updated() {
@@ -46,11 +48,12 @@ window.app = new Vue({
           userType: this.userType
         }
       }).then((response) => {
-        this.userList = [];
+        // this.userList = [];
         this.groupList = [];
         this.selectedSystemId = '';
         setTimeout(() => {
-          this.userList = response.data; //this.makeDataTableFlag(response.data, CRUD_FLAG.RETRIEVE);
+          // this.userList = response.data;
+          this.loadUserTableData(response.data);
           this.waiting = false;
           setTimeout(() => {
             this.initUserTableEvent();
@@ -63,6 +66,90 @@ window.app = new Vue({
       });
     },
 
+    loadUserTableData(data) {
+      const table = $('#table_user_list').DataTable({
+        data: data,
+        columns: [
+          { 
+            data : 'FLAG',
+            className: 'text-center hidden-column',
+            createdCell:  function (td, cellData, rowData, row, col) {
+              $(td).attr('colName', 'FLAG');
+            }
+          },
+          {
+            data: null,
+            defaultContent: `<input type="checkbox">`,
+            orderable: false,
+            className: 'text-center',
+            createdCell:  function (td, cellData, rowData, row, col) {
+              $(td).attr('colName', 'DEL');
+            }
+          },
+          {
+            data : 'SYSTEM_ID',
+            className: 'text-center',
+            createdCell:  function (td, cellData, rowData, row, col) {
+              $(td).attr('colName', 'SYSTEM_ID');
+            }
+          },
+          {
+            data : 'USER_ID',
+            className: 'editabled-cell',
+            createdCell:  function (td, cellData, rowData, row, col) {
+              $(td).attr('contenteditable', 'true');
+              $(td).attr('colName', 'USER_ID');
+            }
+          },
+          {
+            data : 'PASSWORD',
+            className: 'editabled-cell',
+            createdCell:  function (td, cellData, rowData, row, col) {
+              $(td).attr('contenteditable', 'true');
+              $(td).attr('colName', 'PASSWORD');
+            }
+          },            
+          {
+            data : 'USER_TYPE',
+            orderable: false,
+            render: function(data, type, row, meta) {
+              let userTypeSelect = `<select class="browser-default custom-select editabled-cell">`;
+              for (let i = 0; i < commonData.userType.length; i += 1) {
+                const op = commonData.userType[i];
+                if (op === data)  userTypeSelect += `<option value="${op}" selected>${op}</option>`;
+                else              userTypeSelect += `<option value="${op}">${op}</option>`;
+              }
+              userTypeSelect += `</select>`;
+
+              return userTypeSelect;
+            },
+            createdCell:  function (td, cellData, rowData, row, col) {
+              $(td).attr('colName', 'USER_TYPE');
+            }
+          },
+          {
+            data : 'UPDATED',
+            className: 'text-center',
+            createdCell:  function (td, cellData, rowData, row, col) {
+              $(td).attr('colName', 'UPDATED');
+            }
+          },
+          {
+            data : 'SYSTEM_ID',
+            render: function (data, type, row, meta ) {
+              if (data == '' || data == null) {
+                  return ``;
+              } else {
+                return `<label class="history-label">History</label>`;
+              }
+            },
+            className: 'text-center'
+          }     
+        ],
+        bDestroy: true,
+        pagingType: 'full_numbers'
+      });
+    },
 
     onLoadUserHistory(systemId) {
       this.waiting = true;
@@ -83,20 +170,27 @@ window.app = new Vue({
     },
 
     onAddUser() {
-      this.userList.push({
-        FLAG: 'C',
-        SYSTEM_ID: '',
-        USER_ID: '',
-        USER_TYPE: '',
-        UPDATED: ''
-      });
+      if ($('#table_user_list').DataTable().rows().data().length === 0) {
+        this.loadUserTableData([{FLAG: CRUD_FLAG.CREATE, SYSTEM_ID: '', USER_ID: '', PASSWORD: '', USER_TYPE: '', UPDATED: ''}]);
+      } else {
+        const res = $('#table_user_list').DataTable().row.add({FLAG: CRUD_FLAG.CREATE, SYSTEM_ID: '', USER_ID: '', PASSWORD: '', USER_TYPE: '', UPDATED: ''}).draw(false);
+      }
+
+      this.initUserTableEvent();
     },
 
     onSaveUser() {
       this.waiting = true;
+      const dataTable = this.getUserDataTable();
+
+      if (dataTable.length === 0) {
+        this.waiting = false;
+        infoMsg('There is no any change to save.');
+        return;
+      }
       axios.post('/api/saveUsers', {
         params: {
-          data: this.getUserDataTable()
+          data: dataTable
         }
       }).then((response) => {
         this.waiting = false;
@@ -109,23 +203,32 @@ window.app = new Vue({
 
     getUserDataTable() {
       let dataTable = [];
-      const rows = $('#table_user_list').find('tr');
+      if ($('#table_user_list').DataTable().rows().data().length === 0) return [];
 
-      if (rows.length > 1) {
-        for (let i = 1; i < rows.length; i += 1) {
+      const rows = $('#table_user_list').find('tbody tr');
+
+      if (rows.length > 0) {
+        for (let i = 0; i < rows.length; i += 1) {
           const $row = $(rows[i]);
           const cols = $row.find('td');
           let dataRow = {};
+
+          const flag = $row.find('[colName="FLAG"]')[0].innerHTML;
+          const delCheck = $($row.find('[colName="DEL"] input')[0]).is(':checked');
+
+          if (flag === CRUD_FLAG.RETRIEVE) continue;
+          if (flag === CRUD_FLAG.CREATE && delCheck) continue;
 
           for (let j = 0; j < cols.length; j += 1) {
             const $col = $(cols[j]);
             if ($col.attr('colName') === 'DEL') {
               const checked = $($col.find('input')[0]).is(':checked');
               if (checked) dataRow['FLAG'] = CRUD_FLAG.DELETE;
+            } else if ($col.attr('colName') === 'USER_TYPE') {
+              dataRow['USER_TYPE'] = $col.find('select')[0].value;
             } else {
               dataRow[$col.attr('colName')] = $col.text();
             }
-            
           }
 
           dataTable.push(dataRow);
@@ -216,16 +319,6 @@ window.app = new Vue({
       return dataTable;
     },
 
-    makeDataTableFlag(dataTable, flag = CRUD_FLAG.RETRIEVE) {
-      let newDataTable = JSON.parse(JSON.stringify(dataTable));
-
-      for (let i = 0; i < newDataTable.length; i += 1) {
-        newDataTable[i]['FLAG'] = flag;
-      }
-
-      return newDataTable;
-    },
-
     initUserTableEvent() {
       const self = this;
 
@@ -243,17 +336,35 @@ window.app = new Vue({
         self.onLoadGroupList(systemId);
       });
 
-      const $editable = $('#table_user_list .editable-cell');
+      $('#table_user_list td[colName="DEL"] input').unbind();
+      $('#table_user_list td[colName="DEL"] input').click(function() {
+        const flag = $(this).parents('tr').find('td[colName="FLAG"]')[0].innerHTML;
+        if (this.checked && flag === CRUD_FLAG.CREATE) {
+          $('#table_user_list').DataTable().row($(this).parents('tr')).remove().draw();
+        }
+      });
+
+      const $editable = $('#table_user_list .editabled-cell');
       $editable.unbind();
 
-      for (let i = 0; i < $editable.length; i += 1){
+      for (let i = 0; i < $editable.length; i += 1) {
+        // ignore new row
         if ($($($editable[i]).closest('tr').find('td')[0]).text() === CRUD_FLAG.CREATE) continue;
 
-        $editable[i].setAttribute('data-orig',$editable[i].innerHTML);
+        if ($editable[i].tagName === 'SELECT') {
+          $editable[i].setAttribute('data-orig',$editable[i].value);
+        } else {
+          $editable[i].setAttribute('data-orig',$editable[i].innerHTML);
+        }
 
-        const self = this;
         $editable[i].onblur = function() {
-          if (this.innerHTML == this.getAttribute('data-orig')) {
+          let value = '';
+          if (this.tagName === 'SELECT') {
+            value = this.value;
+          } else {
+            value = this.innerHTML;
+          }
+          if (value == this.getAttribute('data-orig')) {
             // no change
             $($(this).closest('tr').find('td')[0]).text(CRUD_FLAG.RETRIEVE);
           } else {
@@ -261,6 +372,31 @@ window.app = new Vue({
             $($(this).closest('tr').find('td')[0]).text(CRUD_FLAG.UPDATE);
           }
         };
+      }
+    },
+    validateUserTable() {
+      if ($('#table_user_list').DataTable().rows().data().length === 0) return true;
+
+      const rows = $('#table_user_list').find('tbody tr');
+
+      if (rows.length > 0) {
+        for (let i = 0; i < rows.length; i += 1) {
+          const $row = $(rows[i]);
+          const cols = $row.find('td');
+          for (let j = 0; j < cols.length; j += 1) {
+            const $col = $(cols[j]);
+            if ($col.attr('colName') === 'USER_ID') {
+              const value = $col.val();
+              if (value === "") {
+                warningMsg()
+              }
+            } else if ($col.attr('colName') === 'PASSWORD') {
+
+            }
+          }
+
+          dataTable.push(dataRow);
+        }
       }
     }
   }

@@ -10,6 +10,9 @@ block styles
     .history-label:hover {
       color:#453af0;
     }
+    .hidden-column {
+      display: none
+    }
 
 block content
   include ../partials/spinner
@@ -41,34 +44,19 @@ block content
                           input#user_type.form-control(type='text' v-model='userType')
                         
             .row(style="margin-top: 10px")
-              table.table.table-hover.table-bordered#table_user_list
-                tbody
-                  tr
-                    th.text-center(style="display:none") flag
-                    th.text-center Del
-                    th.text-center System Id
-                    th.text-center User Id
-                    th.text-center Password
-                    th.text-center User Type
-                    th.text-center Updated
-                    th.text-center Action
-                  tr.dropdown(v-for="(user, key) in userList")
-                    td.text-center(colName="FLAG" style="display:none") {{user.FLAG}}
-                    td.text-center(colName="DEL")
-                      input(type="checkbox")
-                    td.text-center(colName="SYSTEM_ID" style="cursor: pointer" title="View group list") {{user.SYSTEM_ID}}
-                    td.text-center.editable-cell(colName="USER_ID" contenteditable="true") {{user.USER_ID}}
-                    td.text-center.editable-cell(colName="PASSWORD" contenteditable="true") {{user.PASSWORD}}
-                    td
-                      select.browser-default.custom-select
-                        each option in commonData.userType
-                          option(value='option') #{option}
-                        //- option(value='admin') Admin
-                        //- option(value='operator') Operator
-                        //- option(value='viewer') Viewer
-                    td.text-center(colName="UPDATED") {{user.UPDATED}}
-                    td.text-center
-                      label.history-label(v-if="user.SYSTEM_ID !== ''") history
+              .col-12.border.rounded.pt-2.mb-2
+                .table-responsive
+                  table.table.table-hover.table-bordered#table_user_list
+                    thead
+                      tr
+                        th.text-center(style="display:none") flag
+                        th.text-center Del
+                        th.text-center System Id
+                        th.text-center User Id
+                        th.text-center Password
+                        th.text-center User Type
+                        th.text-center Updated
+                        th.text-center Action
       .col-md-4
         .card.card-default
           .card-header
@@ -92,7 +80,6 @@ block content
                     input(type="checkbox")
                   td.text-center(style="display:none" colName="SYSTEM_ID") {{group.SYSTEM_ID}}
                   td.text-center(colName="GROUP_ID" v-bind:contenteditable="group.SYSTEM_ID !== '' ? false : true") {{group.GROUP_ID}}
-
   #userHistoryDialog.modal.fade(role='dialog')
     .modal-dialog
       // Modal content
@@ -117,3 +104,7 @@ block content
         .modal-footer
           button.btn.btn-default(type='button' data-dismiss='modal') Close
 block scripts
+  script.
+    const commonData = {
+      userType: '#{commonData.userType}'.split(',')
+    }
