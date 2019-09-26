@@ -86,7 +86,8 @@ window.app = new Vue({
             {data : 'GROUP_ID'},
             {data : 'SEND_TIME_FORMAT'},
             {data : 'RECV_TIME_FORMAT'},
-            {data : 'NAME'},
+            {data : 'NAME',
+            className: "msg-name-cell"},
             {data : 'RECV_TIME', render: function (data, type, row, meta ) {
               if (data == '' || data == null){
                 return `<span class="unread-message">Unread</span>`;
@@ -97,7 +98,8 @@ window.app = new Vue({
             className: "text-center"}
           ],
           bDestroy: true,
-          pagingType: 'full_numbers'
+          pagingType: 'full_numbers',
+          ordering: false
         });
 
         $('#checkboxAll').attr('disabled', false);
@@ -116,8 +118,10 @@ window.app = new Vue({
 
         $('#selectAllMessage').removeClass( "sorting_asc sorting" );
 
-        $('#messageTable').on('click', 'tbody tr', function(event) {
-          const data = table.row(this).data();
+        $('#messageTable tbody td.msg-name-cell').prop('title', 'Show Message');
+
+        $('#messageTable').on('click', 'tbody td.msg-name-cell', function(event) {
+          const data = table.row($(this).parents('tr')).data();
           if (typeof data != 'undefined') {
             if (data['RECV_TIME'] == '' || data['RECV_TIME'] == null) {
               self.selectedMessage = Object.assign({}, data);
@@ -149,6 +153,7 @@ window.app = new Vue({
     },
 
     onMarkAsRead() {
+      const self = this;
       const data = [];
       $( 'input[type="checkbox"].mark-as-read:checked' ).each(function( index ) {
         const rowData = $('#messageTable').DataTable().row( $(this).parents('tr') ).data();
@@ -158,7 +163,7 @@ window.app = new Vue({
 
       axios.post('/recipient/mark-as-read', data).then((response) => {
         this.waiting = false;
-        this.onBtnFindClick();
+        self.redrawTable(response.data);
         toastr.success('Done');
       });
       setTimeout(() => {
@@ -178,9 +183,9 @@ window.app = new Vue({
         let data = this.data();
         for (let i = 0; i < readData.length; i += 1) {
           const message = readData[i];
-          if (data['TX_ID'] == message['txId']) {
-            data['RECV_TIME'] = message['recvDate'];
-            data['RECV_TIME_FORMAT'] = self.formatDateMessage(message['recvDate']);
+          if (data['TX_ID'] == message['TX_ID']) {
+            data['RECV_TIME'] = message['RECV_TIME'];
+            data['RECV_TIME_FORMAT'] = self.formatDateMessage(message['RECV_TIME']);
             break;
           }
         }
