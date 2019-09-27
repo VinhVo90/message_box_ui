@@ -81,17 +81,21 @@ window.app = new Vue({
             {data : 'GROUP_ID'},
             {data : 'SEND_TIME_FORMAT'},
             {data : 'RECV_TIME_FORMAT'},
-            {data : 'NAME'}
+            {data : 'NAME',
+            className: "msg-name-cell"}
           ],
           bDestroy: true,
-          pagingType: 'full_numbers'
+          pagingType: 'full_numbers',
+          order: []
         });
 
-        $('#messageTable').on('click', 'tbody tr', function(event) {
-          const data = table.row(this).data();
+        $('#messageTable tbody td.msg-name-cell').prop('title', 'Show Message');
+
+        $('#messageTable').on('click', 'tbody td.msg-name-cell', function(event) {
+          const data = table.row($(this).parents('tr')).data();
           self.selectedMessage = Object.assign({}, data);
           $("#recipientDialog").modal("show");
-        })
+        });
 
         this.messageData = data;
       });

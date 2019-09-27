@@ -46,12 +46,13 @@ const markAsRead = async (ctx) => {
   const user = ctx.state.user;
   const recipient = user['USER_ID'];
   const messages = ctx.request.body;
-  let result = [];
+  let arrTxId = [];
 
   for (let i = 0; i < messages.length; i += 1) {
     let message = messages[i];
     await axios.delete(`${CONSTANT.API_SERVER}/msgbox/${recipient}/recv/${message['TX_ID']}`, {authInfo : ''})
       .then((response) => {
+        arrTxId.push(message['TX_ID']);
         ctx.body = response.data;
       })
       .catch((error) => {
@@ -61,7 +62,26 @@ const markAsRead = async (ctx) => {
         };
       });
   }
-  ctx.body = result;
+  await searchMessageByTransactionIds(ctx, arrTxId);
+}
+
+const searchMessageByTransactionIds = async (ctx, listTx) => {
+  const user = ctx.state.user;
+  const recipient = user['USER_ID'];
+
+  let query = `SELECT t.TX_ID , t.SENDER_ID, t.RECIPIENT_ID, t.GROUP_ID, t.MSG_ID, t.SEND_TIME, t.RECV_TIME , m.NAME, m.CONTENT
+              FROM transactions t, messages m
+              WHERE t.msg_id = m.msg_id
+              AND t.TX_ID IN ( :listTx )
+              AND t.RECIPIENT_ID = :recipient
+              ORDER BY t.SEND_TIME DESC`;
+  
+  await models.sequelize.query(query, {
+    replacements: {listTx, recipient},
+    type: Sequelize.QueryTypes.SELECT
+  }).then(async (result) => {
+    ctx.body = result;
+  })
 }
 
 const readMessage = async (ctx) => {
@@ -75,7 +95,7 @@ const readMessage = async (ctx) => {
     await axios.get(`${CONSTANT.API_SERVER}/msgbox/${recipient}/recv/${message['TX_ID']}`, {authInfo : ''})
       .catch((error) => {console.log(error)});
     let recvDate = (new Date()).getTime();
-    result.push({txId : message['TX_ID'], recvDate : recvDate});
+    result.push({TX_ID : message['TX_ID'], RECV_TIME : recvDate});
   }
   ctx.body = result;
 }
