@@ -23,15 +23,15 @@ const searchMessageTransaction = async (ctx) => {
     query += ` AND t.RECV_TIME BETWEEN :recvTimeFrom AND :recvTimeTo`;
   }
   if (searchData.sender != '') {
-    searchData.sender += '%'
+    searchData.sender = `%${searchData.sender}%`;
     query += ` AND t.SENDER_ID LIKE :sender`;
   }
   if (searchData.group != '') {
-    searchData.group += '%'
+    searchData.group = `%${searchData.group}%`;
     query += ` AND t.GROUP_ID LIKE :group`;
   }
   if (searchData.messageName != '') {
-    searchData.messageName += '%'
+    searchData.messageName = `%${searchData.messageName}%`;
     query += ` AND m.NAME LIKE :messageName`;
   }
  
