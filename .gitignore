@@ -12,3 +12,5 @@ release-builds/
 yarn-error\.log
 
 package-lock\.json
+
+public/assets/css/style.css

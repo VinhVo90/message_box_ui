@@ -50,11 +50,9 @@ window.app = new Vue({
           userType: this.userType
         }
       }).then((response) => {
-        // this.userList = [];
         this.groupList = [];
         this.selectedSystemId = '';
         setTimeout(() => {
-          // this.userList = response.data;
           this.loadUserTableData(response.data);
           this.waiting = false;
           setTimeout(() => {
@@ -92,7 +90,9 @@ window.app = new Vue({
             data : 'SYSTEM_ID',
             className: 'text-center',
             createdCell:  function (td, cellData, rowData, row, col) {
+              $(td).attr('class', 'system-id');
               $(td).attr('colName', 'SYSTEM_ID');
+              $(td).attr('title', 'View group list');
             }
           },
           {
