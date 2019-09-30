@@ -20,6 +20,9 @@ block styles
     .system-id:hover {
       color: #453af0;
     }
+    .selected-row {
+      background-color: #ececec;
+    }
 
 block content
   include ../partials/spinner
@@ -37,18 +40,18 @@ block content
                     .btn-group
                       button.btn.btn-primary(@click="onBtnSearchClick") Search
                       button.btn.btn-primary(@click="onAddUser") Add
-                      button.btn.btn-primary(@click="onSaveUser") Save
+                      button.btn.btn-primary(@click="onSaveUser") Apply
                   .row
                     .col-md-6
                       .form-group
-                        label User Id
+                        label System Id / User Id
                         .input-group
-                          input#user_id.form-control(type='text' v-model='userId')
+                          input#user_id.form-control(type='text' v-model='userId' @keydown="onEnterSearch")
                     .col-md-6
                       .form-group
                         label User Type
                         .input-group
-                          input#user_type.form-control(type='text' v-model='userType')
+                          input#user_type.form-control(type='text' v-model='userType' @keydown="onEnterSearch")
                         
             .row(style="margin-top: 10px")
               .col-12.border.rounded.pt-2.mb-2
@@ -72,7 +75,7 @@ block content
             .text-right(style="margin-bottom:10px")
               .btn-group
                 button.btn.btn-primary(@click="onAddGroup") Add
-                button.btn.btn-primary(@click="onSaveGroup") Save
+                button.btn.btn-primary(@click="onSaveGroup") Apply
            
             table.table.table-hover.table-bordered#table_group_list
               tbody

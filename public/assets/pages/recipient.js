@@ -129,14 +129,14 @@ window.app = new Vue({
               axios.post('/recipient/read-message', [data]).then((response) => {
                 this.waiting = false;
                 self.redrawTable(response.data);
-                $("#senderDialog").modal("show");
+                $("#recievedMessageDialog").modal("show");
               });
               setTimeout(() => {
                 this.waiting = false;
               }, 30000);
             } else {
               self.selectedMessage = Object.assign({}, data);
-              $("#senderDialog").modal("show");
+              $("#recievedMessageDialog").modal("show");
             }
           }
         })
@@ -173,7 +173,7 @@ window.app = new Vue({
 
     onRowClick(message) {
       this.selectedMessage = Object.assign({}, message);
-      $("#senderDialog").modal("show");
+      $("#recievedMessageDialog").modal("show");
     },
 
     redrawTable(readData) {

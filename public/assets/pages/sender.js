@@ -94,7 +94,9 @@ window.app = new Vue({
         $('#messageTable').on('click', 'tbody td.msg-name-cell', function(event) {
           const data = table.row($(this).parents('tr')).data();
           self.selectedMessage = Object.assign({}, data);
-          $("#recipientDialog").modal("show");
+
+          $("#sendMessageDialog .modal-title").text('Sent Message');
+          $("#sendMessageDialog").modal("show");
         });
 
         this.messageData = data;
@@ -111,12 +113,13 @@ window.app = new Vue({
         NAME : '',
         CONTENT : ''
       }
-      $("#recipientDialog").modal("show");
+      $("#sendMessageDialog .modal-title").text('Send Message');
+      $("#sendMessageDialog").modal("show");
     },
 
     onRowClick(message) {
       this.selectedMessage = Object.assign({}, message);
-      $("#recipientDialog").modal("show");
+      $("#sendMessageDialog").modal("show");
     },
 
     onSendClick() {
@@ -136,7 +139,7 @@ window.app = new Vue({
         if (data.error) {
           toastr.error(data.data)
         } else {
-          $("#recipientDialog").modal("hide");
+          $("#sendMessageDialog").modal("hide");
           toastr.success('Send success');
         }
       }).catch((error) => {

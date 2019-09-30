@@ -16,7 +16,7 @@ const getUsers = async (ctx) => {
 
   if (userId !== '') {
     query += `
-    AND UPPER(USER_ID) LIKE '%${userId.toUpperCase()}%' \n`;
+    AND (UPPER(USER_ID) LIKE '%${userId.toUpperCase()}%' OR UPPER(U.SYSTEM_ID) LIKE '%${userId.toUpperCase()}%') \n`;
   }
   if (userType !== '') {
     query += `
@@ -53,23 +53,22 @@ const getUserHistory = async (ctx) => {
 const saveUsers = async (ctx) => {
   const { data } = ctx.request.body.params;
   
+  let res;
   for (let i = 0; i < data.length; i += 1) {
     if (data[i].FLAG === CRUD_FLAG.CREATE) {
       // create
-      await createUser(data[i]);
+      await createUser(data[i], ctx);
     } else if (data[i].FLAG === CRUD_FLAG.UPDATE) {
       // update
-      await updateUser(data[i]);
+      await updateUser(data[i], ctx);
     } else if (data[i].FLAG === CRUD_FLAG.DELETE) {
       // delete
-      await deleteUser(data[i]);
+      await deleteUser(data[i], ctx);
     }
-  }
-
-  ctx.body = 'OK';  
+  }  
 }
 
-const createUser = async (user) => {
+const createUser = async (user, ctx) => {
   const query = `
   BEGIN
     PROC_CREATE_USER(:userId,:userType,:passWord);
@@ -82,11 +81,14 @@ const createUser = async (user) => {
       passWord: user.PASSWORD,
     }
   }).then(result => {
-    
+
+  }).catch(ex => {
+    ctx.status = 400;
+    ctx.throw(400, ex);
   });
 }
 
-const updateUser = async (user) => {
+const updateUser = async (user, ctx) => {
   const query = `
   BEGIN
     PROC_UPDATE_USER(:systemId, :userId, :userType, :passWord);
@@ -101,10 +103,13 @@ const updateUser = async (user) => {
     }
   }).then(result => {
     
+  }).catch(ex => {
+    ctx.status = 400;
+    ctx.throw(400, ex);
   });
 }
 
-const deleteUser = async (user) => {
+const deleteUser = async (user, ctx) => {
   const query = `
   BEGIN
     PROC_DELETE_USER(:systemId);
@@ -116,6 +121,9 @@ const deleteUser = async (user) => {
     }
   }).then(result => {
     
+  }).catch(ex => {
+    ctx.status = 400;
+    ctx.throw(400, ex);
   });
 }
 
@@ -144,17 +152,17 @@ const saveGroups = async (ctx) => {
   for (let i = 0; i < data.length; i += 1) {
     if (data[i].FLAG === CRUD_FLAG.CREATE) {
       // create
-      await createGroup(data[i], systemId);
+      await createGroup(data[i], systemId, ctx);
     } else if (data[i].FLAG === CRUD_FLAG.DELETE) {
       // delete
-      await deleteGroup(data[i], systemId);
+      await deleteGroup(data[i], systemId, ctx);
     }
   }
 
   ctx.body = 'OK';  
 }
 
-const createGroup = async (group, systemId) => {
+const createGroup = async (group, systemId, ctx) => {
   const query = `
   INSERT INTO USER_MESSAGE_GROUPS(SYSTEM_ID, GROUP_ID)
   VALUES(:systemId, :groupId)`;
@@ -167,10 +175,13 @@ const createGroup = async (group, systemId) => {
     type: Sequelize.QueryTypes.INSERT
   }).then(result => {
     
+  }).catch(ex => {
+    ctx.status = 400;
+    ctx.throw(400, ex);
   });
 }
 
-const deleteGroup = async (group, systemId) => {
+const deleteGroup = async (group, systemId, ctx) => {
   const query = `
   DELETE FROM USER_MESSAGE_GROUPS
   WHERE SYSTEM_ID = :systemId
@@ -184,6 +195,9 @@ const deleteGroup = async (group, systemId) => {
     type: Sequelize.QueryTypes.DELETE
   }).then(result => {
     
+  }).catch(ex => {
+    ctx.status = 400;
+    ctx.throw(400, ex);
   });
 }
 

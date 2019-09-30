@@ -188,16 +188,20 @@ window.app = new Vue({
     },
 
     onSaveUser() {
-      this.waiting = true;
       if (!this.validateUserTable()) return;
 
       const dataTable = this.getUserDataTable();
-
       if (dataTable.length === 0) {
-        this.waiting = false;
-        toastr.info('There is no any change to save.');
+        toastr.info('There is no any change.');
         return;
       }
+
+      if (!confirm('Are you sure to continue?')) {
+        return;
+      }
+
+      this.waiting = true;
+
       axios.post('/api/saveUsers', {
         params: {
           data: dataTable
@@ -205,9 +209,11 @@ window.app = new Vue({
       }).then((response) => {
         this.waiting = false;
         this.onBtnSearchClick();
+        toastr.success('Applied!');
       }).catch(ex => {
         this.waiting = false;
-        console.log(ex);
+        toastr.error(ex.response.data.error.message);
+        console.log(ex.response.data.error);
       });
     },
 
@@ -234,6 +240,7 @@ window.app = new Vue({
               dataRow[$col.attr('colName')] = $col.text();
             }
           }
+
           if (dataRow['FLAG'] !== CRUD_FLAG.RETRIEVE) {
             dataTable.push(dataRow);
           }
@@ -265,7 +272,7 @@ window.app = new Vue({
 
     onAddGroup() {
       if (this.selectedSystemId === '') {
-        alert('Select an user.');
+        alert('Select an user please.');
         return;
       }
 
@@ -278,21 +285,33 @@ window.app = new Vue({
 
     onSaveGroup() {
       if (this.selectedSystemId === '') {
-        alert('Select an user.');
+        alert('Select an user please.');
+        return;
+      }
+
+      const dataTable = this.getGroupDataTable();
+      if (dataTable.length === 0) {
+        toastr.info('There is no any change.');
+        return;
+      }
+
+      if (!confirm('Are you sure to continue?')) {
         return;
       }
       
       this.waiting = true;
       axios.post('/api/saveGroups', {
         params: {
-          data: this.getGroupDataTable(),
+          data: dataTable,
           systemId: this.selectedSystemId
         }
       }).then((response) => {
         this.waiting = false;
         this.onLoadGroupList(this.selectedSystemId);
+        toastr.success('Applied!');
       }).catch(ex => {
         this.waiting = false;
+        toastr.error(ex.response.data.error.message);
         console.log(ex);
       });
     },
@@ -317,7 +336,9 @@ window.app = new Vue({
             }
           }
 
-          dataTable.push(dataRow);
+          if (dataRow['FLAG'] !== CRUD_FLAG.RETRIEVE) {
+            dataTable.push(dataRow);
+          }
         }
       }
 
@@ -340,6 +361,8 @@ window.app = new Vue({
         const systemId = this.innerHTML;
         if (systemId === '') return;
 
+        $('.selected-row').removeClass('selected-row');
+        $($(this).parents('tr')).addClass('selected-row');
         self.onLoadGroupList(systemId);
       });
 
@@ -381,6 +404,7 @@ window.app = new Vue({
         };
       }
     },
+    
     validateUserTable() {
       if ($('#table_user_list').DataTable().rows().data().length === 0) return true;
 
@@ -420,6 +444,12 @@ window.app = new Vue({
       }
 
       return true;
+    },
+
+    onEnterSearch(e) {
+      if (e.keyCode === 13) {
+        this.onBtnSearchClick();
+      }
     }
   }
 });
