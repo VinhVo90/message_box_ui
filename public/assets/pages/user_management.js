@@ -417,25 +417,27 @@ window.app = new Vue({
           for (let j = 0; j < cols.length; j += 1) {
             const $col = $(cols[j]);
             if ($col.attr('colName') === 'USER_ID') {
-              const value = $col.text();
-              const reg = /^\w+$/;
-              if (value === "") {
+              const options = {
+                name: 'User Id',
+                message: 'User Id must contain only letters, numbers and underscores!',
+                focus: true,
+                required: true,
+                regex: /^\w+$/
+              }
+              
+              if (!validateControl($col[0], options)) {
                 this.waiting = false;
-                toastr.error("Enter User Id please.");
-                $col.focus();
-                return false;
-              } else if (!reg.test(value)) {
-                this.waiting = false;
-                toastr.error("Username must contain only letters, numbers and underscores!");
-                $col.focus();
                 return false;
               }
             } else if ($col.attr('colName') === 'PASSWORD') {
-              const value = $col.text();
-              if (value === "") {
+              const options = {
+                name: 'Password',
+                focus: true,
+                required: true
+              }
+
+              if (!validateControl($col[0], options)) {
                 this.waiting = false;
-                toastr.error("Enter Password please.");
-                $col.focus();
                 return false;
               }
             }

@@ -17,13 +17,13 @@ window.app = new Vue({
 
   methods: {
     onLogin() {
-      if (this.username === "") {
+      if (this.username.trim() === "") {
         toastr.info('Enter username please!');
         $('#username').focus();
         return;
       }
 
-      if (this.password === "") {
+      if (this.password.trim() === "") {
         toastr.info('Enter password please!');
         $('#password').focus();
         return;
