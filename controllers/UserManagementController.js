@@ -2,10 +2,15 @@ const userManagementService = require('../services/UserManagementService');
 const { USER_PERMISSION } = require('../configs/constants');
 
 const getIndex = async (ctx) => {
+  const model = {
+    title: 'User Management'
+  };
+
   ctx.state.commonData = {
     userType: Object.keys(USER_PERMISSION)
   }
-  await ctx.render('user_management/index');
+
+  await ctx.render('user_management/index', model);
 }
 
 const getUsers = async (ctx) => {

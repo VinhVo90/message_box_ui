@@ -1,7 +1,11 @@
 const SenderService = require('../services/SenderService');
 
 const getIndex = async (ctx) => {
-  await ctx.render('sender/index');
+  const model = {
+    title: 'Send'
+  };
+
+  await ctx.render('sender/index', model);
 }
 
 const searchMessageTransaction = async (ctx) => {

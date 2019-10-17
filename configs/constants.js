@@ -50,16 +50,16 @@ const CRUD_FLAG = {
 
 const USER_PERMISSION = {
   viewer : [
-    {name : 'recipient', url : '/recipient', text : 'Recipient'}
+    {name : 'recipient', url : '/recipient', text : 'Receive'}
   ],
   operator : [
-    {name : 'sender', url : '/sender', text : 'Sender'},
-    {name : 'recipient', url : '/recipient', text : 'Recipient'}
+    {name : 'sender', url : '/sender', text : 'Send'},
+    {name : 'recipient', url : '/recipient', text : 'Receive'}
   ],
   admin : [
     {name : 'user_management', url : '/user_management', text : 'User Management'},
-    {name : 'sender', url : '/sender', text : 'Sender'},
-    {name : 'recipient', url : '/recipient', text : 'Recipient'}
+    {name : 'sender', url : '/sender', text : 'Send'},
+    {name : 'recipient', url : '/recipient', text : 'Receive'}
   ]
 }
 
