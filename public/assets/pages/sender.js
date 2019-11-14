@@ -175,9 +175,11 @@ window.app = new Vue({
       const self = this;
       $(dateSelect).on('apply.daterangepicker', function(ev, picker) {
         if (type == 'Send') {
+          self.searchData.sendTime = 'SendTime';
           self.searchData.sendTimeFrom = convertLocalTimeToUTCTime(picker.startDate.valueOf());
           self.searchData.sendTimeTo = convertLocalTimeToUTCTime(picker.endDate.valueOf());
         } else {
+          self.searchData.recvTime = 'RecvTime';
           self.searchData.recvTimeFrom = convertLocalTimeToUTCTime(picker.startDate.valueOf());
           self.searchData.recvTimeTo = convertLocalTimeToUTCTime(picker.endDate.valueOf());
         }
