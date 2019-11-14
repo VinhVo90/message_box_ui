@@ -83,3 +83,51 @@ function confirmDelete(action, title) {
     }
   });
 }
+
+/**
+ * Validate DOM
+ * @param {*} el 
+ * @param {*} options 
+ */
+function validateControl(el, options) {
+  const { name, message, regex, required, errorType, focus, select } = options;
+
+  const $el = $(el);
+  const value = el.innerHTML.trim();
+  
+  if (required === true) {
+    if (value === "") {
+      toastr.error(`Please enter ${name}.`);
+
+      if (select === true) $el.select();
+      else if (focus === true) $el.focus();
+
+      return false;
+    }
+  }
+
+  if (regex !== undefined) {
+    if (!regex.test(value)) {
+      if (message !== undefined) {
+        toastr.error(message);;
+      } else {
+        toastr.error(`${name} is incorrect format`);
+      }
+      
+      if (select === true) $el.select();
+      else if (focus === true) $el.focus();
+      
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function convertLocalTimeToUTCTime(localTimeStamp) {
+  return localTimeStamp + new Date().getTimezoneOffset() * 60000;
+}
+
+function convertUTCTimeToLocalTime(utcTimeStamp) {
+  return utcTimeStamp - new Date().getTimezoneOffset() * 60000;
+}
