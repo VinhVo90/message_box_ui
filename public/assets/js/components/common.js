@@ -123,3 +123,11 @@ function validateControl(el, options) {
 
   return true;
 }
+
+function convertLocalTimeToUTCTime(localTimeStamp) {
+  return localTimeStamp + new Date().getTimezoneOffset() * 60000;
+}
+
+function convertUTCTimeToLocalTime(utcTimeStamp) {
+  return utcTimeStamp - new Date().getTimezoneOffset() * 60000;
+}
